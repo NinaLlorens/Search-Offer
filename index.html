@@ -2,670 +2,681 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Signal Search · Catman · Manutan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --w:#faf9f5; --w2:#f2f0e8; --w3:#e8e4d8; --w4:#d4d0c0;
-  --k:#1a1a14; --k2:#48483a; --k3:#7a7a68; --k4:#adad94;
-  --bd:rgba(26,26,20,.07); --bd2:rgba(26,26,20,.13);
-  --r:10px; --rl:14px; --rxl:20px;
-  --ok:#1e5c00; --ok-bg:#e8f5e0; --ok-bd:rgba(30,92,0,.15);
-  --warn:#7a4a00; --warn-bg:#fff3e0; --warn-bd:rgba(122,74,0,.18);
-  --alert:#7a1010; --alert-bg:#fdecea; --alert-bd:rgba(122,16,16,.18);
-  --trend:#004a7a; --trend-bg:#e4f0fc; --trend-bd:rgba(0,74,122,.18);
+  --w:#faf9f5;--w2:#f2f0e8;--w3:#e8e4d8;--w4:#d4d0c0;
+  --k:#1a1a14;--k2:#48483a;--k3:#7a7a68;--k4:#adad94;
+  --bd:rgba(26,26,20,.07);--bd2:rgba(26,26,20,.13);
+  --r:8px;--rl:12px;
+  --ok:#1e5c00;--ok-bg:#e8f5e0;--ok-bd:rgba(30,92,0,.15);
+  --warn:#7a4a00;--warn-bg:#fff3e0;--warn-bd:rgba(122,74,0,.18);
+  --alert:#7a1010;--alert-bg:#fdecea;--alert-bd:rgba(122,16,16,.18);
+  --trend:#004a7a;--trend-bg:#e4f0fc;--trend-bd:rgba(0,74,122,.18);
   --accent:#c84800;
+  --sidebar:260px;
 }
 html{background:var(--k);font-size:15px;color:var(--k);-webkit-font-smoothing:antialiased}
-body{font-family:'DM Sans',sans-serif;background:var(--w);min-height:100vh;max-width:480px;margin:0 auto;background:var(--k);position:relative}
+body{font-family:'DM Sans',sans-serif;background:var(--w);min-height:100vh}
 
-/* ── STATUS BAR ── */
-.status-zone{height:env(safe-area-inset-top,0px);background:var(--k)}
+/* ── DESKTOP LAYOUT ── */
+.shell{display:flex;min-height:100vh}
 
-/* ── APP HEADER ── */
-.app-header{
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
   background:var(--k);
-  padding:16px 20px 18px;
-  position:sticky;top:env(safe-area-inset-top,0);
-  z-index:100;
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:0;
 }
-.ah-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.ah-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.35)}
-.ah-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin-right:6px}
-.ah-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;color:var(--w);line-height:1.1;letter-spacing:-.3px}
-.ah-title em{font-style:italic;color:rgba(250,249,245,.5)}
-.ah-tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);border-radius:999px;padding:3px}
-.ah-tab{padding:5px 14px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;color:rgba(250,249,245,.45);border:none;background:none;transition:all .15s;font-family:'DM Sans',sans-serif}
-.ah-tab.active{background:var(--w);color:var(--k);font-weight:600}
+.sb-top{padding:28px 24px 24px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sb-dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.sb-title{font-family:'Fraunces',serif;font-size:26px;font-weight:400;color:var(--w);line-height:1.1;letter-spacing:-.4px}
+.sb-title em{font-style:italic;color:rgba(250,249,245,.4)}
+.sb-stats{margin-top:16px;display:flex;gap:16px}
+.sb-stat{font-size:11px;font-family:'DM Mono',monospace}
+.sb-stat-n{color:rgba(250,249,245,.8);font-size:16px;font-weight:500;display:block;line-height:1}
+.sb-stat-l{color:rgba(250,249,245,.3);margin-top:2px;display:block}
 
-/* ── CONTENT ── */
-.content{background:var(--w);border-radius:24px 24px 0 0;min-height:calc(100vh - 120px);padding:0 0 80px;overflow:hidden}
+.sb-nav{padding:16px 12px;flex:1}
+.sb-nav-label{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(250,249,245,.25);padding:0 12px;margin-bottom:6px}
+.sb-nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:var(--r);
+  font-size:13px;color:rgba(250,249,245,.5);
+  cursor:pointer;transition:all .1s;border:none;background:none;
+  width:100%;text-align:left;font-family:'DM Sans',sans-serif;
+  margin-bottom:2px;
+}
+.sb-nav-item:hover{background:rgba(255,255,255,.07);color:rgba(250,249,245,.8)}
+.sb-nav-item.active{background:rgba(255,255,255,.12);color:var(--w);font-weight:500}
+.sb-nav-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.sb-nav-count{margin-left:auto;font-size:10px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.08);padding:2px 7px;border-radius:999px;color:rgba(250,249,245,.4)}
+.sb-nav-item.active .sb-nav-count{background:rgba(255,255,255,.15);color:rgba(250,249,245,.7)}
 
-/* ── FAMILY LIST ── */
-.section-head{display:flex;align-items:baseline;justify-content:space-between;padding:20px 20px 12px}
-.sh-title{font-family:'Fraunces',serif;font-size:17px;font-weight:400;color:var(--k)}
-.sh-sub{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3)}
+.sb-sep{border:none;border-top:1px solid rgba(255,255,255,.06);margin:8px 12px}
 
-.fam-list{padding:0 12px;display:flex;flex-direction:column;gap:8px}
+.sb-period{padding:16px 24px 20px;border-top:1px solid rgba(255,255,255,.07);margin-top:auto}
+.sb-period-label{font-size:10px;font-family:'DM Mono',monospace;color:rgba(250,249,245,.25);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.sb-period-val{font-size:12px;color:rgba(250,249,245,.5)}
+
+/* MAIN */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{
+  background:var(--w);border-bottom:1px solid var(--bd);
+  padding:16px 32px;display:flex;align-items:center;gap:16px;
+  position:sticky;top:0;z-index:50;
+}
+.tb-breadcrumb{font-size:13px;color:var(--k3);display:flex;align-items:center;gap:8px}
+.tb-bc-sep{color:var(--k4)}
+.tb-bc-current{color:var(--k);font-weight:500}
+.tb-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--k3);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;padding:6px 10px;border-radius:var(--r);transition:all .1s}
+.tb-back:hover{background:var(--w2);color:var(--k)}
+.tb-spacer{flex:1}
+.tb-tabs{display:flex;gap:2px;background:var(--w2);border-radius:999px;padding:3px}
+.tb-tab{padding:5px 16px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;color:var(--k3);border:none;background:none;transition:all .12s;font-family:'DM Sans',sans-serif}
+.tb-tab:hover{color:var(--k)}
+.tb-tab.active{background:var(--k);color:var(--w)}
+
+/* PAGE */
+.page{padding:32px;flex:1}
+
+/* GRID FAMILLES */
+.fam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:4px}
 .fam-card{
   background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
-  padding:14px 16px;cursor:pointer;transition:all .12s;
-  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;cursor:pointer;transition:all .12s;
 }
-.fam-card:hover,.fam-card:active{background:var(--w2);border-color:var(--bd2)}
-.fam-icon{font-size:24px;width:44px;height:44px;background:var(--w2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.fam-body{flex:1;min-width:0}
-.fam-name{font-size:14px;font-weight:600;color:var(--k);margin-bottom:3px;display:flex;align-items:center;gap:6px}
-.fam-meta{font-size:11px;color:var(--k3);display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace}
-.fam-disp{font-weight:500}
+.fam-card:hover{border-color:var(--bd2);background:var(--w2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,26,20,.06)}
+.fc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.fc-icon{font-size:28px}
+.fc-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.fc-nr{font-size:10px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:2px 8px;border-radius:999px}
+.fc-trend{font-size:10px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:2px 8px;border-radius:999px}
+.fc-name{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--k);margin-bottom:6px;letter-spacing:-.2px}
+.fc-meta{display:flex;align-items:center;gap:10px;font-size:12px;font-family:'DM Mono',monospace;color:var(--k3)}
+.fc-disp{font-weight:500}
 .disp-ok{color:var(--ok)}
 .disp-warn{color:var(--warn)}
 .disp-alert{color:var(--alert)}
-.fam-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
-.fam-arrow{font-size:14px;color:var(--k4)}
-.fam-nr{font-size:10px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:2px 7px;border-radius:999px;font-weight:500}
-.fam-trend{font-size:10px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:2px 7px;border-radius:999px;display:flex;align-items:center;gap:3px}
+.fc-bar{width:100%;height:3px;background:var(--w3);border-radius:2px;margin-top:12px}
+.fc-bar-fill{height:100%;border-radius:2px}
 
-/* ── SUBFAMILY LIST ── */
-.back-btn{display:flex;align-items:center;gap:8px;padding:16px 20px 0;cursor:pointer;color:var(--k3);font-size:13px;border:none;background:none;font-family:'DM Sans',sans-serif}
-.back-btn:hover{color:var(--k)}
+/* HERO SECTION */
+.section-hero{margin-bottom:28px}
+.hero-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.hero-title{font-family:'Fraunces',serif;font-size:32px;font-weight:400;color:var(--k);letter-spacing:-.4px;line-height:1.1;margin-bottom:16px}
+.hero-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px}
+.hkpi{background:var(--w2);border-radius:var(--rl);padding:14px 18px;border:1px solid var(--bd)}
+.hkpi-n{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--k);line-height:1}
+.hkpi-l{font-size:10px;color:var(--k3);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.hkpi.accent .hkpi-n{color:var(--accent)}
 
-.fam-hero{padding:16px 20px 0}
-.fh-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--k3);margin-bottom:6px}
-.fh-name{font-family:'Fraunces',serif;font-size:24px;font-weight:400;color:var(--k);letter-spacing:-.3px;line-height:1.1;margin-bottom:10px}
-.fh-kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
-.fh-kpi{background:var(--w2);border-radius:var(--r);padding:10px 12px}
-.fhk-n{font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:var(--k);line-height:1}
-.fhk-l{font-size:10px;color:var(--k3);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
-.fhk-accent .fhk-n{color:var(--accent)}
-
-.sf-list{padding:0 12px;display:flex;flex-direction:column;gap:6px}
+/* SUBFAM LIST */
+.sf-list{display:flex;flex-direction:column;gap:8px}
 .sf-card{
-  background:var(--w);border:1px solid var(--bd);border-radius:var(--r);
-  padding:12px 14px;cursor:pointer;transition:all .12s;
-  display:flex;align-items:center;gap:12px;
+  background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
+  padding:14px 18px;cursor:pointer;transition:all .1s;
+  display:flex;align-items:center;gap:16px;
 }
-.sf-card:hover,.sf-card:active{background:var(--w2)}
+.sf-card:hover{border-color:var(--bd2);background:var(--w2)}
+.sf-bar-v{width:4px;height:40px;background:var(--w3);border-radius:2px;flex-shrink:0}
+.sf-bar-fill-v{width:100%;border-radius:2px}
 .sf-body{flex:1;min-width:0}
-.sf-name{font-size:13px;font-weight:500;color:var(--k);margin-bottom:2px}
-.sf-meta{font-size:11px;color:var(--k3);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:6px}
-.sf-bar{width:60px;height:4px;background:var(--w3);border-radius:2px;flex-shrink:0}
-.sf-bar-fill{height:100%;border-radius:2px;background:var(--warn)}
-.sf-bar-fill.ok{background:var(--ok)}
-.sf-bar-fill.alert{background:var(--alert)}
+.sf-name{font-size:14px;font-weight:500;color:var(--k);margin-bottom:3px}
+.sf-meta{font-size:12px;font-family:'DM Mono',monospace;color:var(--k3);display:flex;gap:10px}
+.sf-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sf-trend-badge{font-size:11px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:3px 10px;border-radius:999px}
+.sf-nr-badge{font-size:11px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:3px 10px;border-radius:999px}
+.sf-arrow{color:var(--k4);font-size:16px}
 
-/* ── SUBFAM DETAIL ── */
-.sf-detail{padding:0 16px}
-.sf-detail-back{display:flex;align-items:center;gap:8px;padding:14px 0 4px;cursor:pointer;color:var(--k3);font-size:13px;border:none;background:none;font-family:'DM Sans',sans-serif}
-.sf-hero{padding:0 0 16px}
-.sfh-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
-.sfh-name{font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:var(--k);margin-bottom:12px}
-.sfh-stats{display:flex;gap:8px}
-.sfh-stat{background:var(--w2);border-radius:var(--r);padding:8px 12px;flex:1}
-.sfhs-n{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--k);line-height:1}
-.sfhs-l{font-size:10px;color:var(--k3);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+/* DETAIL LAYOUT */
+.detail-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+@media(max-width:1100px){.detail-layout{grid-template-columns:1fr}}
 
 /* DEMAND SECTIONS */
-.demand-section{margin-bottom:16px}
-.ds-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:0 2px}
-.ds-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.ds-dot.covered{background:var(--trend)}
-.ds-dot.uncovered{background:var(--alert)}
-.ds-title{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--k3)}
-.ds-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--k4);margin-left:auto}
+.demand-block{background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);overflow:hidden;margin-bottom:16px}
+.db-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd);background:var(--w2)}
+.db-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.db-dot.covered{background:var(--trend)}
+.db-dot.uncovered{background:var(--alert)}
+.db-title{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--k2)}
+.db-count{margin-left:auto;font-size:11px;font-family:'DM Mono',monospace;color:var(--k4)}
+.db-cols{display:grid;grid-template-columns:1fr 60px 80px 80px 60px;gap:0;padding:8px 18px 4px;font-size:10px;font-family:'DM Mono',monospace;color:var(--k4);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--bd)}
 
 .term-row{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;background:var(--w);border:1px solid var(--bd);
-  border-radius:var(--r);margin-bottom:5px;
+  display:grid;grid-template-columns:1fr 60px 80px 80px 60px;
+  align-items:center;gap:0;padding:10px 18px;
+  border-bottom:1px solid var(--bd);transition:background .08s;
 }
-.term-name{font-size:13px;font-weight:500;color:var(--k);flex:1;min-width:0}
-.term-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);flex-shrink:0}
-.term-bar-wrap{width:50px;flex-shrink:0}
-.term-bar{height:3px;background:var(--w3);border-radius:2px}
+.term-row:last-child{border-bottom:none}
+.term-row:hover{background:var(--w2)}
+.term-name{font-size:13px;font-weight:500;color:var(--k)}
+.term-vol{font-size:12px;font-family:'DM Mono',monospace;color:var(--k2)}
+.term-bar-cell{display:flex;align-items:center;gap:6px}
+.term-bar{flex:1;height:4px;background:var(--w3);border-radius:2px}
 .term-bar-fill{height:100%;border-radius:2px}
 .tbd-ok{background:#60a830}
 .tbd-warn{background:#d4880a}
 .tbd-alert{background:#c03020}
-.term-pct{font-size:11px;font-family:'DM Mono',monospace;width:34px;text-align:right;flex-shrink:0}
-.pct-up{color:var(--ok)}
-.pct-dn{color:var(--alert)}
-.pct-flat{color:var(--k4)}
+.term-pct-cell{font-size:12px;font-family:'DM Mono',monospace;text-align:right}
+.up{color:var(--ok)}
+.dn{color:var(--alert)}
+.mu{color:var(--k4)}
+.term-conv{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);text-align:right}
 
 .nr-row{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 12px;border-radius:var(--r);margin-bottom:4px;
-  background:var(--alert-bg);border:1px solid var(--alert-bd);
+  display:flex;align-items:center;gap:12px;
+  padding:10px 18px;border-bottom:1px solid var(--alert-bd);
+  background:var(--alert-bg);
 }
-.nr-icon{font-size:12px;color:var(--alert);flex-shrink:0}
-.nr-name{font-size:12.5px;color:var(--alert);font-style:italic;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nr-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--alert);flex-shrink:0;opacity:.7}
+.nr-row:last-child{border-bottom:none}
+.nr-icon{color:var(--alert);font-size:12px;flex-shrink:0}
+.nr-name{font-size:13px;color:var(--alert);font-style:italic;flex:1}
+.nr-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--alert);opacity:.7}
 
-/* CATMAN SIGNALS */
-.signals-block{
-  background:var(--k);border-radius:var(--rl);
-  padding:14px 16px;margin-bottom:16px;
-}
-.sb-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.sb-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.35)}
-.sb-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);display:block;margin-left:8px}
-.signal-item{margin-bottom:8px}
+/* SIGNALS CARD */
+.signals-card{background:var(--k);border-radius:var(--rl);padding:20px 22px;position:sticky;top:80px}
+.sc-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sc-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.3)}
+.sc-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);display:block;margin-left:8px}
+.signal-item{margin-bottom:10px}
 .signal-item:last-child{margin-bottom:0}
-.sig-text{font-size:12.5px;line-height:1.6;color:rgba(250,249,245,.8);font-weight:300;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:var(--r);border-left:2px solid rgba(250,249,245,.15)}
+.sig-text{font-size:12.5px;line-height:1.65;color:rgba(250,249,245,.8);font-weight:300;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:var(--r);border-left:2px solid rgba(250,249,245,.12)}
 .sig-text strong{font-weight:600;color:var(--w)}
 .sig-trend{border-left-color:rgba(200,72,0,.7);background:rgba(200,72,0,.08)}
-
-.sig-loading{display:flex;align-items:center;gap:8px;color:rgba(250,249,245,.3);font-size:12px;padding:8px 0}
+.sig-loading{display:flex;align-items:center;gap:8px;color:rgba(250,249,245,.3);font-size:12px;padding:4px 0}
 .sig-ld-dot{width:5px;height:5px;border-radius:50%;background:rgba(250,249,245,.3);animation:blink 1.2s ease infinite}
 .sig-ld-dot:nth-child(2){animation-delay:.2s}
 .sig-ld-dot:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
 
-/* EMPTY */
-.empty-msg{text-align:center;padding:2rem;color:var(--k3);font-size:13px}
-
-/* BOTTOM NAV */
-.bottom-nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:480px;
-  background:var(--w);border-top:1px solid var(--bd);
-  padding:8px 0 calc(8px + env(safe-area-inset-bottom,0px));
-  display:flex;z-index:200;
+/* ALERTS + TRENDS */
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.list-card{
+  background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
+  padding:14px 16px;cursor:pointer;transition:all .1s;
+  display:flex;align-items:center;gap:12px;
 }
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0;border:none;background:none;-webkit-tap-highlight-color:transparent}
-.bn-icon{font-size:19px;line-height:1}
-.bn-label{font-size:10px;font-weight:500;color:var(--k3)}
-.bn-item.active .bn-label{color:var(--k)}
-.bn-item.active .bn-icon{transform:scale(1.1)}
+.list-card:hover{border-color:var(--bd2);background:var(--w2)}
+.lc-icon{font-size:22px;width:40px;height:40px;background:var(--w2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lc-body{flex:1;min-width:0}
+.lc-name{font-size:13px;font-weight:500;color:var(--k);margin-bottom:2px}
+.lc-sub{font-size:11px;color:var(--k3);margin-bottom:4px}
+.lc-terms{font-size:11px;color:var(--alert);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lc-right{flex-shrink:0}
+.badge-alert{font-size:11px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:3px 10px;border-radius:999px}
+.badge-trend{font-size:11px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:3px 10px;border-radius:999px}
+.badge-disp{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3)}
 
-/* TABS content */
-.tab-pane{display:none}
-.tab-pane.active{display:block}
+/* PAGE HEADER */
+.page-header{margin-bottom:24px}
+.ph-title{font-family:'Fraunces',serif;font-size:28px;font-weight:400;color:var(--k);letter-spacing:-.3px}
+.ph-sub{font-size:13px;color:var(--k3);margin-top:4px;font-family:'DM Mono',monospace}
 
-/* Scroll hint */
-.more-hint{text-align:center;padding:8px 0 4px;font-size:11px;color:var(--k4);font-family:'DM Mono',monospace}
+/* EMPTY */
+.empty{text-align:center;padding:3rem;color:var(--k3);font-size:13px}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .topbar{padding:12px 16px}
+  .page{padding:16px}
+  .fam-grid{grid-template-columns:1fr}
+  .hero-kpis{grid-template-columns:repeat(3,1fr)}
+  .detail-layout{grid-template-columns:1fr}
+  .signals-card{position:static}
+  .db-cols{display:none}
+  .term-row{grid-template-columns:1fr 50px 70px 50px;gap:0}
+  .term-conv{display:none}
+  .ph-title{font-size:22px}
+  .mobile-nav{display:flex}
+}
+
+/* MOBILE NAV */
+.mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--w);border-top:1px solid var(--bd);
+  z-index:100;padding-bottom:env(safe-area-inset-bottom,0);
+}
+.mn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
+.mn-icon{font-size:18px;line-height:1}
+.mn-label{font-size:10px;font-weight:500;color:var(--k3)}
+.mn-item.active .mn-label{color:var(--k)}
+
+/* MOBILE TOPBAR */
+.mobile-header{
+  display:none;background:var(--k);
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 14px;
+  position:sticky;top:0;z-index:100;
+}
+@media(max-width:768px){
+  .mobile-header{display:flex;align-items:center;justify-content:space-between}
+  body{padding-bottom:60px}
+}
+.mh-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--w)}
+.mh-title em{font-style:italic;color:rgba(250,249,245,.4)}
+.mh-right{font-size:11px;font-family:'DM Mono',monospace;color:rgba(250,249,245,.35)}
+
+/* Tab views */
+.tab-view{display:none}
+.tab-view.active{display:block}
 </style>
 </head>
 <body>
 
-<div class="status-zone"></div>
-
-<div class="app-header">
-  <div class="ah-row1">
-    <div>
-      <div class="ah-brand"><span class="ah-dot"></span>Manutan FR · Avril 2026</div>
-      <div class="ah-title">Signal<br><em>Search</em></div>
-    </div>
-    <div>
-      <div style="font-size:11px;color:rgba(250,249,245,.3);font-family:'DM Mono',monospace;text-align:right;margin-bottom:6px">catman</div>
-      <div style="font-size:11px;color:rgba(250,249,245,.45);font-family:'DM Mono',monospace;line-height:1.6">
-        <span id="total-vol" style="color:rgba(250,249,245,.7);font-weight:500">—</span> rech.<br>
-        <span id="total-fam" style="color:rgba(250,249,245,.7);font-weight:500">—</span> familles
-      </div>
-    </div>
-  </div>
-  <div class="ah-tabs">
-    <button class="ah-tab active" id="tab-btn-familles" onclick="showTab('familles')">Univers</button>
-    <button class="ah-tab" id="tab-btn-alertes" onclick="showTab('alertes')">Alertes</button>
-    <button class="ah-tab" id="tab-btn-tendances" onclick="showTab('tendances')">Tendances</button>
-  </div>
+<!-- MOBILE HEADER -->
+<div class="mobile-header" id="mobile-header">
+  <div class="mh-title">Signal <em>Search</em></div>
+  <div class="mh-right" id="mh-period">Manutan FR · Avr. 2026</div>
 </div>
 
-<div class="content">
+<div class="shell">
 
-  <!-- TAB: FAMILLES -->
-  <div class="tab-pane active" id="tab-familles">
-    <div id="view-families">
-      <div class="section-head">
-        <span class="sh-title">Vos univers</span>
-        <span class="sh-sub" id="fam-count-label">—</span>
-      </div>
-      <div class="fam-list" id="fam-list"></div>
-    </div>
-
-    <div id="view-subfamilies" style="display:none">
-      <button class="back-btn" onclick="showFamilies()">← Retour</button>
-      <div class="fam-hero" id="fam-hero"></div>
-      <div class="sf-list" id="sf-list"></div>
-    </div>
-
-    <div id="view-detail" style="display:none">
-      <div class="sf-detail">
-        <button class="sf-detail-back" id="detail-back-btn">← <span id="detail-back-label">Retour</span></button>
-        <div class="sf-hero" id="sf-hero"></div>
-        <div class="signals-block" id="signals-block">
-          <div class="sb-header">
-            <div class="sb-label">Signaux catman</div>
-          </div>
-          <div class="sig-loading" id="sig-loading">
-            <div class="sig-ld-dot"></div><div class="sig-ld-dot"></div><div class="sig-ld-dot"></div>
-            <span>Analyse en cours…</span>
-          </div>
-          <div id="signals-content"></div>
+  <!-- SIDEBAR (desktop) -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-eyebrow"><span class="sb-dot"></span>Manutan Group</div>
+      <div class="sb-title">Signal<br><em>Search</em></div>
+      <div class="sb-stats">
+        <div class="sb-stat">
+          <span class="sb-stat-n" id="sb-vol">—</span>
+          <span class="sb-stat-l">recherches</span>
         </div>
-        <div id="demand-sections"></div>
+        <div class="sb-stat">
+          <span class="sb-stat-n" id="sb-fam">—</span>
+          <span class="sb-stat-l">univers</span>
+        </div>
+        <div class="sb-stat">
+          <span class="sb-stat-n" id="sb-nr">—</span>
+          <span class="sb-stat-l">non couverts</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- TAB: ALERTES -->
-  <div class="tab-pane" id="tab-alertes">
-    <div class="section-head">
-      <span class="sh-title">Trous d'offre</span>
-      <span class="sh-sub" id="alert-count-label">—</span>
+    <div class="sb-nav">
+      <div class="sb-nav-label">Navigation</div>
+      <button class="sb-nav-item active" id="snav-univers" onclick="setView('univers')">
+        <span class="sb-nav-icon">◈</span> Univers
+        <span class="sb-nav-count" id="snav-univers-count">—</span>
+      </button>
+      <button class="sb-nav-item" id="snav-alertes" onclick="setView('alertes')">
+        <span class="sb-nav-icon">⚑</span> Trous d'offre
+        <span class="sb-nav-count" id="snav-alertes-count">—</span>
+      </button>
+      <button class="sb-nav-item" id="snav-tendances" onclick="setView('tendances')">
+        <span class="sb-nav-icon">↑</span> Tendances
+        <span class="sb-nav-count" id="snav-tendances-count">—</span>
+      </button>
     </div>
-    <div id="alert-list" style="padding:0 12px"></div>
-  </div>
 
-  <!-- TAB: TENDANCES -->
-  <div class="tab-pane" id="tab-tendances">
-    <div class="section-head">
-      <span class="sh-title">Signaux de croissance</span>
-      <span class="sh-sub" id="trend-count-label">—</span>
+    <div class="sb-period">
+      <div class="sb-period-label">Période</div>
+      <div class="sb-period-val">Avril 2026 · FR</div>
     </div>
-    <div id="trend-list" style="padding:0 12px"></div>
-  </div>
+  </aside>
 
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar" id="topbar">
+      <div class="tb-breadcrumb" id="breadcrumb">
+        <span class="tb-bc-current">Univers</span>
+      </div>
+      <div class="tb-spacer"></div>
+      <div class="tb-tabs" id="tb-tabs" style="display:none">
+        <button class="tb-tab active" onclick="setView('univers')">Univers</button>
+        <button class="tb-tab" onclick="setView('alertes')">Alertes</button>
+        <button class="tb-tab" onclick="setView('tendances')">Tendances</button>
+      </div>
+    </div>
+
+    <div class="page">
+
+      <!-- VIEW: UNIVERS -->
+      <div class="tab-view active" id="view-univers">
+
+        <!-- Families list -->
+        <div id="panel-families">
+          <div class="page-header">
+            <div class="ph-title">Vos univers</div>
+            <div class="ph-sub" id="fam-sub">—</div>
+          </div>
+          <div class="fam-grid" id="fam-grid"></div>
+        </div>
+
+        <!-- Subfamilies list -->
+        <div id="panel-subfamilies" style="display:none">
+          <div class="section-hero" id="fam-hero"></div>
+          <div class="sf-list" id="sf-list"></div>
+        </div>
+
+        <!-- Detail -->
+        <div id="panel-detail" style="display:none">
+          <div class="section-hero" id="sf-hero-block"></div>
+          <div class="detail-layout">
+            <div id="demand-left"></div>
+            <div>
+              <div class="signals-card" id="signals-card">
+                <div class="sc-header"><div class="sc-label">Signaux catman</div></div>
+                <div class="sig-loading" id="sig-loading">
+                  <div class="sig-ld-dot"></div><div class="sig-ld-dot"></div><div class="sig-ld-dot"></div>
+                  <span style="font-size:12px;color:rgba(250,249,245,.3)">Analyse en cours…</span>
+                </div>
+                <div id="signals-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIEW: ALERTES -->
+      <div class="tab-view" id="view-alertes">
+        <div class="page-header">
+          <div class="ph-title">Trous d'offre</div>
+          <div class="ph-sub" id="alert-sub">—</div>
+        </div>
+        <div class="list-grid" id="alert-grid"></div>
+      </div>
+
+      <!-- VIEW: TENDANCES -->
+      <div class="tab-view" id="view-tendances">
+        <div class="page-header">
+          <div class="ph-title">Signaux de croissance</div>
+          <div class="ph-sub" id="trend-sub">—</div>
+        </div>
+        <div class="list-grid" id="trend-grid"></div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<nav class="bottom-nav">
-  <button class="bn-item active" id="bn-univers" onclick="switchNav('univers')">
-    <span class="bn-icon">◈</span>
-    <span class="bn-label">Univers</span>
-  </button>
-  <button class="bn-item" id="bn-alertes" onclick="switchNav('alertes')">
-    <span class="bn-icon">⚑</span>
-    <span class="bn-label">Alertes</span>
-  </button>
-  <button class="bn-item" id="bn-tendances" onclick="switchNav('tendances')">
-    <span class="bn-icon">↑</span>
-    <span class="bn-label">Tendances</span>
-  </button>
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobile-nav">
+  <button class="mn-item active" id="mn-univers" onclick="setView('univers')"><span class="mn-icon">◈</span><span class="mn-label">Univers</span></button>
+  <button class="mn-item" id="mn-alertes" onclick="setView('alertes')"><span class="mn-icon">⚑</span><span class="mn-label">Alertes</span></button>
+  <button class="mn-item" id="mn-tendances" onclick="setView('tendances')"><span class="mn-icon">↑</span><span class="mn-label">Tendances</span></button>
 </nav>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
-const DATA = {"Hygiène & nettoyage":{"icon":"🧹","v":9942,"d":0.5117,"subfams":{"Poubelles & collecte déchets":{"v":4735,"d":0.4981,"terms":[{"t":"poubelle","v":1057,"d":0.5317,"cr":0.088,"pct":0.4335},{"t":"cendrier","v":410,"d":0.5293,"cr":0.0805,"pct":0.0819},{"t":"benne","v":157,"d":0.4968,"cr":0.0064,"pct":-0.836},{"t":"sac","v":138,"d":0.5652,"cr":0.1087,"pct":0.6304},{"t":"sac poubelle","v":133,"d":0.3835,"cr":0.1278,"pct":0.0187},{"t":"poubelle tri","v":90,"d":0.5667,"cr":0.0556,"pct":1.7778},{"t":"poubelle de tri","v":88,"d":0.5,"cr":0.0455,"pct":0.1364},{"t":"corbeille","v":82,"d":0.622,"cr":0.0244,"pct":-0.628}],"nr":[{"t":"distributeur de portions multi rack","v":5},{"t":"corbeille escapade","v":4},{"t":"poubelle dib","v":4},{"t":"gants nitrile","v":4}],"trend":{"t":"poubelle inox","pct":8.33}},"Balais & nettoyage sol":{"v":1521,"d":0.4767,"terms":[{"t":"balai","v":343,"d":0.5044,"cr":0.105,"pct":0.4727},{"t":"pelle","v":260,"d":0.4615,"cr":0.1,"pct":-0.1355},{"t":"raclette","v":183,"d":0.4973,"cr":0.0929,"pct":-0.1033},{"t":"balais","v":121,"d":0.4545,"cr":0.124,"pct":0.3186},{"t":"balai coco","v":37,"d":0.3243,"cr":0.2162,"pct":0.5351},{"t":"raclette sol","v":33,"d":0.4848,"cr":0.0606,"pct":-0.4015}],"nr":[{"t":"frange 41cm avec croche","v":4},{"t":"balai brosse large","v":3},{"t":"recharge balai vigor","v":3}],"trend":{"t":"manche balai","pct":5.86}},"Aspirateurs & machines":{"v":1013,"d":0.5708,"terms":[{"t":"aspirateur","v":329,"d":0.5441,"cr":0.0638,"pct":0.2051},{"t":"karcher","v":137,"d":0.7007,"cr":0.0365,"pct":-0.4421},{"t":"autolaveuse","v":33,"d":0.6667,"cr":0.0606,"pct":1.1212},{"t":"nettoyeur haute pression","v":40,"d":0.675,"cr":0.0,"pct":-1.0}],"nr":[{"t":"aspirateur amiante","v":4},{"t":"aspirateur main libre","v":4},{"t":"aspirateur feuilles autotracte","v":3}],"trend":{"t":"autolaveuse","pct":1.12}},"Hygiène des mains":{"v":438,"d":0.5114,"terms":[{"t":"savon","v":70,"d":0.6,"cr":0.1,"pct":-0.2818},{"t":"papier toilette","v":48,"d":0.5833,"cr":0.2917,"pct":0.2444},{"t":"distributeur savon","v":33,"d":0.5152,"cr":0.0909,"pct":1.0},{"t":"gel hydro","v":32,"d":0.4062,"cr":0.0938,"pct":0.125}],"nr":[{"t":"savon sec","v":3}],"trend":{"t":"essuie mains","pct":2.6}},"Tenues hygiène jetables":{"v":441,"d":0.5277,"terms":[{"t":"blouse","v":80,"d":0.525,"cr":0.0625,"pct":0.0089},{"t":"tablier","v":76,"d":0.5263,"cr":0.0658,"pct":0.2368},{"t":"charlotte","v":69,"d":0.6232,"cr":0.1739,"pct":0.2016},{"t":"manchette","v":40,"d":0.4,"cr":0.05,"pct":-0.5875},{"t":"blouse jetable","v":34,"d":0.6176,"cr":0.0588,"pct":-0.7765},{"t":"combinaison jetable","v":19,"d":0.5263,"cr":0.1053,"pct":1.5263}],"nr":[{"t":"blouse blanche cintree","v":4},{"t":"tablier jetable specifique","v":3}],"trend":{"t":"combinaison jetable","pct":1.53}}},"nr_total":37},"Entrepôt & manutention":{"icon":"📦","v":12264,"d":0.5141,"subfams":{"Chariots & transpalettes":{"v":2311,"d":0.549,"terms":[{"t":"transpalette","v":285,"d":0.5193,"cr":0.0807,"pct":0.64},{"t":"diable","v":273,"d":0.5275,"cr":0.0769,"pct":0.2308},{"t":"palette","v":179,"d":0.4581,"cr":0.1006,"pct":1.1821},{"t":"roll","v":166,"d":0.4458,"cr":0.0663,"pct":0.1747},{"t":"chariot inox","v":138,"d":0.5725,"cr":0.058,"pct":2.8261},{"t":"gerbeur","v":129,"d":0.4729,"cr":0.0543,"pct":0.2548}],"nr":[{"t":"chariot de ménage","v":5},{"t":"diable palettiseur fûts","v":5},{"t":"chariot pour linge","v":4}],"trend":{"t":"transpa","pct":3.36}},"Rayonnage & stockage":{"v":4199,"d":0.5019,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"rayonnage","v":367,"d":0.4932,"cr":0.049,"pct":-0.1385},{"t":"etagere","v":365,"d":0.6959,"cr":0.0493,"pct":0.0932},{"t":"rack","v":242,"d":0.5207,"cr":0.0207,"pct":-0.5259}],"nr":[{"t":"armoire archives anti feu","v":7},{"t":"étagère chambre froide","v":4},{"t":"casier chaussures","v":4}],"trend":{"t":"bac rangement","pct":0.53}},"Échelles & plateformes":{"v":1240,"d":0.5226,"terms":[{"t":"marche pied","v":369,"d":0.5257,"cr":0.0596,"pct":0.093},{"t":"escabeau","v":321,"d":0.5452,"cr":0.0717,"pct":0.2053},{"t":"plateforme","v":127,"d":0.4961,"cr":0.0394,"pct":0.6339},{"t":"marche pieds","v":48,"d":0.4583,"cr":0.0625,"pct":0.4479}],"nr":[{"t":"escabeau girafe","v":6},{"t":"sabots escabeaux jumbo","v":3}],"trend":{"t":"plateforme","pct":0.63}},"Sangles & levage":{"v":1199,"d":0.5075,"terms":[{"t":"sangle","v":304,"d":0.5559,"cr":0.0526,"pct":0.038},{"t":"crochet","v":198,"d":0.6263,"cr":0.0657,"pct":-0.0852},{"t":"palan","v":188,"d":0.5319,"cr":0.016,"pct":0.5957},{"t":"elingue","v":115,"d":0.4609,"cr":0.0435,"pct":-0.0621}],"nr":[{"t":"sangle d assurage","v":3},{"t":"taquet protection sangles","v":4}],"trend":{"t":"palan","pct":0.60}},"Vestiaires & casiers":{"v":1047,"d":0.4499,"terms":[{"t":"vestiaire","v":400,"d":0.44,"cr":0.0475,"pct":-0.0764},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"casier vestiaire","v":51,"d":0.5098,"cr":0.0392,"pct":0.549},{"t":"vestiaire multicases","v":19,"d":0.4737,"cr":0.2105,"pct":4.6842}],"nr":[{"t":"vestiaire lili","v":3},{"t":"banc vestiaire lili","v":3}],"trend":{"t":"vestiaire multicases","pct":4.68}}},"nr_total":50},"Sécurité & EPI":{"icon":"🦺","v":6411,"d":0.553,"subfams":{"Gants de protection":{"v":829,"d":0.5153,"terms":[{"t":"gants","v":251,"d":0.5219,"cr":0.1394,"pct":0.4071},{"t":"gant","v":234,"d":0.453,"cr":0.1239,"pct":-0.1944},{"t":"gants nitrile","v":39,"d":0.4103,"cr":0.1282,"pct":-0.0028},{"t":"gant anti coupure","v":27,"d":0.5926,"cr":0.2222,"pct":0.7172}],"nr":[{"t":"gant mécanique jetable","v":4},{"t":"gant honeywell","v":3},{"t":"gant long covergard","v":3}],"trend":{"t":"gants jetables","pct":2.0}},"Chaussures de sécurité":{"v":645,"d":0.5997,"terms":[{"t":"chaussure","v":233,"d":0.618,"cr":0.0644,"pct":-0.2167},{"t":"chaussures","v":103,"d":0.6214,"cr":0.068,"pct":-0.1165},{"t":"embout","v":33,"d":0.4848,"cr":0.1212,"pct":0.0303}],"nr":[],"trend":null},"Masques & respiratoires":{"v":372,"d":0.5349,"terms":[{"t":"masque","v":108,"d":0.5,"cr":0.1019,"pct":1.2238},{"t":"masque ffp3","v":73,"d":0.6438,"cr":0.0548,"pct":-0.5303},{"t":"ffp3","v":70,"d":0.7143,"cr":0.0286,"pct":-0.5571},{"t":"demi masque","v":42,"d":0.5,"cr":0.3571,"pct":4.1786}],"nr":[{"t":"masque amiante","v":3},{"t":"demi masque ventilé","v":3}],"trend":{"t":"demi masque","pct":4.18}},"Signalisation":{"v":1705,"d":0.6114,"terms":[{"t":"panneau","v":239,"d":0.5816,"cr":0.0628,"pct":0.205},{"t":"cone","v":159,"d":0.5409,"cr":0.0566,"pct":-0.2075},{"t":"pictogramme","v":92,"d":0.5978,"cr":0.0217,"pct":-0.6304},{"t":"balisage","v":99,"d":0.5354,"cr":0.0707,"pct":-0.1957}],"nr":[{"t":"balise lumineuse","v":4},{"t":"panneau toquer avant d entrer","v":3}],"trend":{"t":"signalisation","pct":1.02}},"Bac de rétention":{"v":780,"d":0.4522,"terms":[{"t":"bac de rétention","v":389,"d":0.491,"cr":0.0488,"pct":0.0101},{"t":"absorbant","v":139,"d":0.4892,"cr":0.1511,"pct":0.3597},{"t":"kit absorbant","v":25,"d":0.4,"cr":0.12,"pct":1.16}],"nr":[{"t":"kit anti pollution hydrocarbure","v":6},{"t":"nappe absorbante","v":3}],"trend":{"t":"kit absorbant","pct":1.16}},"Premiers secours":{"v":451,"d":0.5584,"terms":[{"t":"rince oeil","v":145,"d":0.5724,"cr":0.1172,"pct":0.0112},{"t":"extincteur","v":79,"d":0.6456,"cr":0.038,"pct":-0.3418},{"t":"trousse","v":45,"d":0.4444,"cr":0.0889,"pct":0.8667},{"t":"armoire pharmacie","v":36,"d":0.5278,"cr":0.0278,"pct":-0.8056}],"nr":[{"t":"armoire à pharmacie avec code","v":4},{"t":"extincteur véhicule","v":3}],"trend":{"t":"trousse","pct":0.87}}},"nr_total":41},"Bureau & mobilier":{"icon":"🪑","v":10036,"d":0.5296,"subfams":{"Sièges & fauteuils":{"v":2724,"d":0.549,"terms":[{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"tabouret","v":285,"d":0.5474,"cr":0.0456,"pct":0.1018},{"t":"fauteuil","v":277,"d":0.5921,"cr":0.0361,"pct":-0.4144},{"t":"chaise de bureau","v":181,"d":0.4475,"cr":0.0663,"pct":-0.2518},{"t":"chaise pliante","v":69,"d":0.5942,"cr":0.1014,"pct":0.7923}],"nr":[{"t":"chaise pvc empilable dana","v":3},{"t":"fauteuil armand non feu","v":3}],"trend":{"t":"assis debout","pct":6.62}},"Bureaux & tables":{"v":2841,"d":0.5219,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"table pliante","v":149,"d":0.5503,"cr":0.0738,"pct":-0.0119},{"t":"table haute","v":130,"d":0.5308,"cr":0.0385,"pct":0.6346},{"t":"table pique nique","v":80,"d":0.5875,"cr":0.1125,"pct":0.7438}],"nr":[{"t":"perche pour laver table","v":12},{"t":"bureau open space","v":9},{"t":"bureau assis debout lean 18","v":3}],"trend":{"t":"tableau affichage","pct":3.31}},"Rangement bureau":{"v":1298,"d":0.5118,"terms":[{"t":"meuble","v":189,"d":0.6243,"cr":0.037,"pct":0.1111},{"t":"caisson","v":159,"d":0.566,"cr":0.0314,"pct":-0.5549},{"t":"armoire basse","v":105,"d":0.4381,"cr":0.0762,"pct":0.7333},{"t":"classeur","v":96,"d":0.4583,"cr":0.0521,"pct":-0.0253}],"nr":[{"t":"armoires archives anti feu","v":7},{"t":"armoire pour couverture coupe feux","v":4}],"trend":{"t":"armoires","pct":4.87}},"Affichage & tableau":{"v":1261,"d":0.4714,"terms":[{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"paper board","v":20,"d":0.3,"cr":0.15,"pct":1.625}],"nr":[],"trend":{"t":"paper board","pct":1.63}},"Informatique":{"v":1031,"d":0.5701,"terms":[{"t":"souris","v":148,"d":0.6351,"cr":0.1284,"pct":1.6674},{"t":"multiprise","v":156,"d":0.4872,"cr":0.0833,"pct":-0.192},{"t":"tapis de souris","v":61,"d":0.4918,"cr":0.1311,"pct":1.0609},{"t":"imprimante","v":51,"d":0.6863,"cr":0.098,"pct":0.0022},{"t":"support écran","v":44,"d":0.5,"cr":0.0909,"pct":3.8182}],"nr":[{"t":"souris filaires","v":3},{"t":"multiprises grande longueur","v":3}],"trend":{"t":"support écran","pct":3.82}}},"nr_total":35},"Emballage":{"icon":"📫","v":7239,"d":0.5125,"subfams":{"Adhésifs & scotch":{"v":1064,"d":0.4751,"terms":[{"t":"scotch","v":304,"d":0.4605,"cr":0.125,"pct":-0.0144},{"t":"dymo","v":233,"d":0.4979,"cr":0.0858,"pct":-0.3512},{"t":"scotch double face","v":98,"d":0.4694,"cr":0.0816,"pct":-0.5394},{"t":"étiquette","v":56,"d":0.625,"cr":0.0536,"pct":1.1964}],"nr":[{"t":"scotch velcro","v":5},{"t":"ruban adhésif double face","v":4},{"t":"scotch amiante","v":3}],"trend":{"t":"étiquette","pct":1.20}},"Bacs & contenants":{"v":2746,"d":0.4981,"terms":[{"t":"bac de retention","v":303,"d":0.4917,"cr":0.0594,"pct":-0.1416},{"t":"bac a bec","v":265,"d":0.4491,"cr":0.0491,"pct":-0.2584},{"t":"bidon","v":163,"d":0.4601,"cr":0.0552,"pct":-0.3699},{"t":"bac plastique","v":163,"d":0.4601,"cr":0.0613,"pct":0.3701},{"t":"bac de rangement","v":144,"d":0.5486,"cr":0.0694,"pct":1.5231}],"nr":[{"t":"housse chauffante cuve 1000l","v":5},{"t":"cuve carburant","v":3}],"trend":{"t":"bac bleu","pct":2.44}},"Boîtes & caisses carton":{"v":1656,"d":0.5227,"terms":[{"t":"boite de rangement","v":169,"d":0.4734,"cr":0.0533,"pct":-0.1721},{"t":"boite à clé","v":141,"d":0.5035,"cr":0.0709,"pct":-0.3901},{"t":"caisse plastique","v":123,"d":0.3902,"cr":0.0569,"pct":0.1509},{"t":"boite plastique","v":94,"d":0.4468,"cr":0.0532,"pct":-0.4415}],"nr":[{"t":"boite à bec kangarou","v":5},{"t":"caisse rangement plastique 100l","v":4}],"trend":{"t":"boite a clef","pct":6.71}},"Couteaux & outils":{"v":1259,"d":0.5538,"terms":[{"t":"cutter","v":329,"d":0.5532,"cr":0.1155,"pct":-0.0196},{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"pince coupante","v":119,"d":0.479,"cr":0.1176,"pct":1.1618}],"nr":[{"t":"pinces de fixation relexim","v":4}],"trend":{"t":"lame cutter","pct":5.10}}},"nr_total":35},"Outillage":{"icon":"🔧","v":4575,"d":0.5158,"subfams":{"Outillage à main":{"v":1772,"d":0.5151,"terms":[{"t":"tournevis","v":124,"d":0.5161,"cr":0.0726,"pct":0.25},{"t":"facom","v":121,"d":0.6364,"cr":0.0248,"pct":-0.5077},{"t":"ciseaux","v":88,"d":0.3977,"cr":0.0909,"pct":0.6777},{"t":"marteau","v":78,"d":0.359,"cr":0.0513,"pct":-0.1282}],"nr":[{"t":"marteau facom","v":3},{"t":"tournevis facom elec","v":3}],"trend":{"t":"stanley","pct":2.5}},"Outillage électroportatif":{"v":462,"d":0.5688,"terms":[{"t":"visseuse","v":95,"d":0.5684,"cr":0.0316,"pct":-0.6463},{"t":"meuleuse","v":54,"d":0.4815,"cr":0.037,"pct":1.9259},{"t":"perceuse","v":53,"d":0.6038,"cr":0.0755,"pct":0.1698},{"t":"dewalt","v":42,"d":0.7143,"cr":0.119,"pct":3.2857}],"nr":[{"t":"perceuse visseuse moteur sans charbon","v":5},{"t":"ponceuse girafe","v":5}],"trend":{"t":"dewalt","pct":3.29}},"Rangement outils":{"v":798,"d":0.5291,"terms":[{"t":"servante","v":366,"d":0.5437,"cr":0.0383,"pct":1.0528},{"t":"coffre","v":160,"d":0.6312,"cr":0.0312,"pct":-0.3073},{"t":"mallette","v":43,"d":0.3953,"cr":0.0465,"pct":0.5349}],"nr":[],"trend":{"t":"servante","pct":1.05}}},"nr_total":28},"Espace extérieur":{"icon":"🌿","v":2178,"d":0.5354,"subfams":{"Abris & stockage":{"v":328,"d":0.6221,"terms":[{"t":"abri","v":107,"d":0.6075,"cr":0.0374,"pct":0.2461},{"t":"abri fumeur","v":56,"d":0.5536,"cr":0.0536,"pct":3.0714},{"t":"abri velo","v":34,"d":0.6471,"cr":0.0,"pct":-1.0}],"nr":[{"t":"abri pour vélos maternelle","v":3}],"trend":{"t":"abri fumeur","pct":3.07}},"Signalisation routière":{"v":1283,"d":0.4799,"terms":[{"t":"miroir","v":400,"d":0.4875,"cr":0.055,"pct":-0.0169},{"t":"poteau","v":235,"d":0.4936,"cr":0.0426,"pct":-0.5511},{"t":"barrière","v":156,"d":0.5,"cr":0.0256,"pct":-0.2222},{"t":"ralentisseur","v":60,"d":0.35,"cr":0.0,"pct":-1.0}],"nr":[{"t":"protection poteau hydrant","v":3}],"trend":{"t":"poteaux","pct":0.38}}},"nr_total":5},"Restauration":{"icon":"☕","v":739,"d":0.5522,"subfams":{"Équipements cuisine":{"v":609,"d":0.5824,"terms":[{"t":"micro onde","v":139,"d":0.518,"cr":0.1295,"pct":0.282},{"t":"frigo","v":124,"d":0.6452,"cr":0.0565,"pct":0.1667},{"t":"café","v":87,"d":0.6437,"cr":0.1264,"pct":5.069},{"t":"bouilloire","v":38,"d":0.6053,"cr":0.1579,"pct":0.3263}],"nr":[{"t":"cadenas pour frigo","v":3}],"trend":{"t":"café","pct":5.07}}},"nr_total":5}};
+const DATA = {"Hygiène & nettoyage":{"icon":"🧹","v":9942,"d":0.5117,"subfams":{"Poubelles & collecte déchets":{"v":4735,"d":0.4981,"terms":[{"t":"poubelle","v":1057,"d":0.5317,"cr":0.088,"pct":0.4335},{"t":"cendrier","v":410,"d":0.5293,"cr":0.0805,"pct":0.0819},{"t":"benne","v":157,"d":0.4968,"cr":0.0064,"pct":-0.836},{"t":"sac","v":138,"d":0.5652,"cr":0.1087,"pct":0.6304},{"t":"sac poubelle","v":133,"d":0.3835,"cr":0.1278,"pct":0.0187},{"t":"poubelle tri","v":90,"d":0.5667,"cr":0.0556,"pct":1.7778},{"t":"poubelle de tri","v":88,"d":0.5,"cr":0.0455,"pct":0.1364},{"t":"corbeille","v":82,"d":0.622,"cr":0.0244,"pct":-0.628}],"nr":[{"t":"distributeur de portions multi rack","v":5},{"t":"corbeille escapade","v":4},{"t":"poubelle dib","v":4}],"trend":{"t":"poubelle inox","pct":8.33}},"Balais & nettoyage sol":{"v":1521,"d":0.4767,"terms":[{"t":"balai","v":343,"d":0.5044,"cr":0.105,"pct":0.4727},{"t":"pelle","v":260,"d":0.4615,"cr":0.1,"pct":-0.1355},{"t":"raclette","v":183,"d":0.4973,"cr":0.0929,"pct":-0.1033},{"t":"balais","v":121,"d":0.4545,"cr":0.124,"pct":0.3186},{"t":"balai coco","v":37,"d":0.3243,"cr":0.2162,"pct":0.5351}],"nr":[{"t":"frange 41cm avec croche","v":4},{"t":"balai brosse large","v":3}],"trend":{"t":"manche balai","pct":5.86}},"Aspirateurs & machines":{"v":1013,"d":0.5708,"terms":[{"t":"aspirateur","v":329,"d":0.5441,"cr":0.0638,"pct":0.2051},{"t":"karcher","v":137,"d":0.7007,"cr":0.0365,"pct":-0.4421},{"t":"autolaveuse","v":33,"d":0.6667,"cr":0.0606,"pct":1.1212},{"t":"nettoyeur haute pression","v":40,"d":0.675,"cr":0.0,"pct":-1.0}],"nr":[{"t":"aspirateur amiante","v":4},{"t":"aspirateur main libre","v":4}],"trend":{"t":"autolaveuse","pct":1.12}},"Hygiène des mains":{"v":438,"d":0.5114,"terms":[{"t":"savon","v":70,"d":0.6,"cr":0.1,"pct":-0.2818},{"t":"papier toilette","v":48,"d":0.5833,"cr":0.2917,"pct":0.2444},{"t":"distributeur savon","v":33,"d":0.5152,"cr":0.0909,"pct":1.0}],"nr":[{"t":"savon sec","v":3}],"trend":{"t":"essuie mains","pct":2.6}},"Tenues hygiène jetables":{"v":441,"d":0.5277,"terms":[{"t":"blouse","v":80,"d":0.525,"cr":0.0625,"pct":0.0089},{"t":"tablier","v":76,"d":0.5263,"cr":0.0658,"pct":0.2368},{"t":"charlotte","v":69,"d":0.6232,"cr":0.1739,"pct":0.2016},{"t":"manchette","v":40,"d":0.4,"cr":0.05,"pct":-0.5875},{"t":"combinaison jetable","v":19,"d":0.5263,"cr":0.1053,"pct":1.5263}],"nr":[{"t":"blouse blanche cintree","v":4}],"trend":{"t":"combinaison jetable","pct":1.53}}},"nr_total":37},"Entrepôt & manutention":{"icon":"📦","v":12264,"d":0.5141,"subfams":{"Chariots & transpalettes":{"v":2311,"d":0.549,"terms":[{"t":"transpalette","v":285,"d":0.5193,"cr":0.0807,"pct":0.64},{"t":"diable","v":273,"d":0.5275,"cr":0.0769,"pct":0.2308},{"t":"palette","v":179,"d":0.4581,"cr":0.1006,"pct":1.1821},{"t":"chariot inox","v":138,"d":0.5725,"cr":0.058,"pct":2.8261},{"t":"gerbeur","v":129,"d":0.4729,"cr":0.0543,"pct":0.2548}],"nr":[{"t":"chariot de ménage","v":5},{"t":"diable palettiseur fûts","v":5}],"trend":{"t":"transpa","pct":3.36}},"Rayonnage & stockage":{"v":4199,"d":0.5019,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"rayonnage","v":367,"d":0.4932,"cr":0.049,"pct":-0.1385},{"t":"etagere","v":365,"d":0.6959,"cr":0.0493,"pct":0.0932},{"t":"rack","v":242,"d":0.5207,"cr":0.0207,"pct":-0.5259}],"nr":[{"t":"armoire archives anti feu","v":7},{"t":"étagère chambre froide","v":4}],"trend":{"t":"bac rangement","pct":0.53}},"Échelles & plateformes":{"v":1240,"d":0.5226,"terms":[{"t":"marche pied","v":369,"d":0.5257,"cr":0.0596,"pct":0.093},{"t":"escabeau","v":321,"d":0.5452,"cr":0.0717,"pct":0.2053},{"t":"plateforme","v":127,"d":0.4961,"cr":0.0394,"pct":0.6339}],"nr":[{"t":"escabeau girafe","v":6}],"trend":{"t":"plateforme","pct":0.63}},"Sangles & levage":{"v":1199,"d":0.5075,"terms":[{"t":"sangle","v":304,"d":0.5559,"cr":0.0526,"pct":0.038},{"t":"crochet","v":198,"d":0.6263,"cr":0.0657,"pct":-0.0852},{"t":"palan","v":188,"d":0.5319,"cr":0.016,"pct":0.5957},{"t":"elingue","v":115,"d":0.4609,"cr":0.0435,"pct":-0.0621}],"nr":[{"t":"sangle d assurage","v":3}],"trend":{"t":"palan","pct":0.60}},"Vestiaires & casiers":{"v":1047,"d":0.4499,"terms":[{"t":"vestiaire","v":400,"d":0.44,"cr":0.0475,"pct":-0.0764},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"vestiaire multicases","v":19,"d":0.4737,"cr":0.2105,"pct":4.6842}],"nr":[{"t":"vestiaire lili","v":3}],"trend":{"t":"vestiaire multicases","pct":4.68}}},"nr_total":50},"Sécurité & EPI":{"icon":"🦺","v":6411,"d":0.553,"subfams":{"Gants de protection":{"v":829,"d":0.5153,"terms":[{"t":"gants","v":251,"d":0.5219,"cr":0.1394,"pct":0.4071},{"t":"gant","v":234,"d":0.453,"cr":0.1239,"pct":-0.1944},{"t":"gants nitrile","v":39,"d":0.4103,"cr":0.1282,"pct":-0.0028},{"t":"gant anti coupure","v":27,"d":0.5926,"cr":0.2222,"pct":0.7172}],"nr":[{"t":"gant mécanique jetable","v":4},{"t":"gant honeywell","v":3}],"trend":{"t":"gants jetables","pct":2.0}},"Masques & respiratoires":{"v":372,"d":0.5349,"terms":[{"t":"masque","v":108,"d":0.5,"cr":0.1019,"pct":1.2238},{"t":"masque ffp3","v":73,"d":0.6438,"cr":0.0548,"pct":-0.5303},{"t":"demi masque","v":42,"d":0.5,"cr":0.3571,"pct":4.1786}],"nr":[{"t":"masque amiante","v":3},{"t":"demi masque ventilé","v":3}],"trend":{"t":"demi masque","pct":4.18}},"Signalisation":{"v":1705,"d":0.6114,"terms":[{"t":"panneau","v":239,"d":0.5816,"cr":0.0628,"pct":0.205},{"t":"cone","v":159,"d":0.5409,"cr":0.0566,"pct":-0.2075},{"t":"pictogramme","v":92,"d":0.5978,"cr":0.0217,"pct":-0.6304}],"nr":[{"t":"balise lumineuse","v":4}],"trend":{"t":"signalisation","pct":1.02}},"Bac de rétention":{"v":780,"d":0.4522,"terms":[{"t":"bac de rétention","v":389,"d":0.491,"cr":0.0488,"pct":0.0101},{"t":"absorbant","v":139,"d":0.4892,"cr":0.1511,"pct":0.3597},{"t":"kit absorbant","v":25,"d":0.4,"cr":0.12,"pct":1.16}],"nr":[{"t":"kit anti pollution hydrocarbure","v":6}],"trend":{"t":"kit absorbant","pct":1.16}},"Chaussures de sécurité":{"v":645,"d":0.5997,"terms":[{"t":"chaussure","v":233,"d":0.618,"cr":0.0644,"pct":-0.2167},{"t":"chaussures","v":103,"d":0.6214,"cr":0.068,"pct":-0.1165},{"t":"embout","v":33,"d":0.4848,"cr":0.1212,"pct":0.0303}],"nr":[],"trend":null},"Premiers secours":{"v":451,"d":0.5584,"terms":[{"t":"rince oeil","v":145,"d":0.5724,"cr":0.1172,"pct":0.0112},{"t":"extincteur","v":79,"d":0.6456,"cr":0.038,"pct":-0.3418},{"t":"trousse","v":45,"d":0.4444,"cr":0.0889,"pct":0.8667}],"nr":[{"t":"armoire à pharmacie avec code","v":4}],"trend":{"t":"trousse","pct":0.87}}},"nr_total":41},"Bureau & mobilier":{"icon":"🪑","v":10036,"d":0.5296,"subfams":{"Sièges & fauteuils":{"v":2724,"d":0.549,"terms":[{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"tabouret","v":285,"d":0.5474,"cr":0.0456,"pct":0.1018},{"t":"fauteuil","v":277,"d":0.5921,"cr":0.0361,"pct":-0.4144},{"t":"chaise pliante","v":69,"d":0.5942,"cr":0.1014,"pct":0.7923}],"nr":[{"t":"chaise pvc empilable dana","v":3}],"trend":{"t":"assis debout","pct":6.62}},"Bureaux & tables":{"v":2841,"d":0.5219,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"table pliante","v":149,"d":0.5503,"cr":0.0738,"pct":-0.0119},{"t":"table haute","v":130,"d":0.5308,"cr":0.0385,"pct":0.6346},{"t":"table pique nique","v":80,"d":0.5875,"cr":0.1125,"pct":0.7438}],"nr":[{"t":"perche pour laver table","v":12},{"t":"bureau open space","v":9}],"trend":{"t":"tableau affichage","pct":3.31}},"Affichage & tableau":{"v":1261,"d":0.4714,"terms":[{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"paper board","v":20,"d":0.3,"cr":0.15,"pct":1.625}],"nr":[],"trend":{"t":"paper board","pct":1.63}},"Informatique":{"v":1031,"d":0.5701,"terms":[{"t":"souris","v":148,"d":0.6351,"cr":0.1284,"pct":1.6674},{"t":"multiprise","v":156,"d":0.4872,"cr":0.0833,"pct":-0.192},{"t":"support écran","v":44,"d":0.5,"cr":0.0909,"pct":3.8182}],"nr":[{"t":"souris filaires","v":3}],"trend":{"t":"support écran","pct":3.82}},"Rangement bureau":{"v":1298,"d":0.5118,"terms":[{"t":"meuble","v":189,"d":0.6243,"cr":0.037,"pct":0.1111},{"t":"caisson","v":159,"d":0.566,"cr":0.0314,"pct":-0.5549},{"t":"armoire basse","v":105,"d":0.4381,"cr":0.0762,"pct":0.7333}],"nr":[{"t":"armoires archives anti feu","v":7}],"trend":{"t":"armoires","pct":4.87}}},"nr_total":35},"Emballage":{"icon":"📫","v":7239,"d":0.5125,"subfams":{"Bacs & contenants":{"v":2746,"d":0.4981,"terms":[{"t":"bac de retention","v":303,"d":0.4917,"cr":0.0594,"pct":-0.1416},{"t":"bac a bec","v":265,"d":0.4491,"cr":0.0491,"pct":-0.2584},{"t":"bidon","v":163,"d":0.4601,"cr":0.0552,"pct":-0.3699},{"t":"bac de rangement","v":144,"d":0.5486,"cr":0.0694,"pct":1.5231}],"nr":[{"t":"housse chauffante cuve 1000l","v":5}],"trend":{"t":"bac bleu","pct":2.44}},"Adhésifs & scotch":{"v":1064,"d":0.4751,"terms":[{"t":"scotch","v":304,"d":0.4605,"cr":0.125,"pct":-0.0144},{"t":"dymo","v":233,"d":0.4979,"cr":0.0858,"pct":-0.3512},{"t":"étiquette","v":56,"d":0.625,"cr":0.0536,"pct":1.1964}],"nr":[{"t":"scotch velcro","v":5},{"t":"scotch amiante","v":3}],"trend":{"t":"étiquette","pct":1.20}},"Couteaux & outils":{"v":1259,"d":0.5538,"terms":[{"t":"cutter","v":329,"d":0.5532,"cr":0.1155,"pct":-0.0196},{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"pince coupante","v":119,"d":0.479,"cr":0.1176,"pct":1.1618}],"nr":[{"t":"pinces de fixation relexim","v":4}],"trend":{"t":"lame cutter","pct":5.10}},"Boîtes & caisses carton":{"v":1656,"d":0.5227,"terms":[{"t":"boite de rangement","v":169,"d":0.4734,"cr":0.0533,"pct":-0.1721},{"t":"boite à clé","v":141,"d":0.5035,"cr":0.0709,"pct":-0.3901},{"t":"caisse plastique","v":123,"d":0.3902,"cr":0.0569,"pct":0.1509}],"nr":[{"t":"boite à bec kangarou","v":5}],"trend":{"t":"boite a clef","pct":6.71}}},"nr_total":35},"Outillage":{"icon":"🔧","v":4575,"d":0.5158,"subfams":{"Outillage à main":{"v":1772,"d":0.5151,"terms":[{"t":"tournevis","v":124,"d":0.5161,"cr":0.0726,"pct":0.25},{"t":"facom","v":121,"d":0.6364,"cr":0.0248,"pct":-0.5077},{"t":"ciseaux","v":88,"d":0.3977,"cr":0.0909,"pct":0.6777},{"t":"marteau","v":78,"d":0.359,"cr":0.0513,"pct":-0.1282}],"nr":[{"t":"marteau facom","v":3}],"trend":{"t":"stanley","pct":2.5}},"Outillage électroportatif":{"v":462,"d":0.5688,"terms":[{"t":"visseuse","v":95,"d":0.5684,"cr":0.0316,"pct":-0.6463},{"t":"meuleuse","v":54,"d":0.4815,"cr":0.037,"pct":1.9259},{"t":"dewalt","v":42,"d":0.7143,"cr":0.119,"pct":3.2857}],"nr":[{"t":"perceuse visseuse moteur sans charbon","v":5}],"trend":{"t":"dewalt","pct":3.29}},"Rangement outils":{"v":798,"d":0.5291,"terms":[{"t":"servante","v":366,"d":0.5437,"cr":0.0383,"pct":1.0528},{"t":"coffre","v":160,"d":0.6312,"cr":0.0312,"pct":-0.3073},{"t":"mallette","v":43,"d":0.3953,"cr":0.0465,"pct":0.5349}],"nr":[],"trend":{"t":"servante","pct":1.05}}},"nr_total":28},"Espace extérieur":{"icon":"🌿","v":2178,"d":0.5354,"subfams":{"Abris & stockage":{"v":328,"d":0.6221,"terms":[{"t":"abri","v":107,"d":0.6075,"cr":0.0374,"pct":0.2461},{"t":"abri fumeur","v":56,"d":0.5536,"cr":0.0536,"pct":3.0714},{"t":"abri velo","v":34,"d":0.6471,"cr":0.0,"pct":-1.0}],"nr":[{"t":"abri pour vélos maternelle","v":3}],"trend":{"t":"abri fumeur","pct":3.07}},"Signalisation routière":{"v":1283,"d":0.4799,"terms":[{"t":"miroir","v":400,"d":0.4875,"cr":0.055,"pct":-0.0169},{"t":"poteau","v":235,"d":0.4936,"cr":0.0426,"pct":-0.5511},{"t":"barrière","v":156,"d":0.5,"cr":0.0256,"pct":-0.2222}],"nr":[{"t":"protection poteau hydrant","v":3}],"trend":{"t":"poteaux","pct":0.38}}},"nr_total":5},"Restauration":{"icon":"☕","v":739,"d":0.5522,"subfams":{"Équipements cuisine":{"v":609,"d":0.5824,"terms":[{"t":"micro onde","v":139,"d":0.518,"cr":0.1295,"pct":0.282},{"t":"frigo","v":124,"d":0.6452,"cr":0.0565,"pct":0.1667},{"t":"café","v":87,"d":0.6437,"cr":0.1264,"pct":5.069},{"t":"bouilloire","v":38,"d":0.6053,"cr":0.1579,"pct":0.3263}],"nr":[{"t":"cadenas pour frigo","v":3}],"trend":{"t":"café","pct":5.07}}},"nr_total":5}};
 
 // ── STATE ──────────────────────────────────────────────────────────────────────
-let state = {
-  view: 'families', // families | subfamilies | detail
-  tab: 'familles',
-  currentFam: null,
-  currentSf: null,
-  signals: {}
-};
+let S = { view:'univers', panel:'families', fam:null, sf:null, signals:{} };
 
-// ── UTILS ──────────────────────────────────────────────────────────────────────
-const pct = (v, compact) => {
-  if (v == null) return '—';
-  const s = `${v > 0 ? '+' : ''}${(v * 100).toFixed(compact ? 0 : 1)}%`;
-  return s;
-};
-const dispColor = d => d >= 0.60 ? 'disp-alert' : d >= 0.48 ? 'disp-warn' : 'disp-ok';
-const barColor = d => d >= 0.60 ? 'alert' : d >= 0.48 ? '' : 'ok';
-const termBarColor = d => d >= 0.60 ? 'tbd-alert' : d >= 0.45 ? 'tbd-warn' : 'tbd-ok';
+const dispCls = d => d>=0.6?'disp-alert':d>=0.48?'disp-warn':'disp-ok';
+const barCls = d => d>=0.6?'tbd-alert':d>=0.45?'tbd-warn':'tbd-ok';
+const pct = v => v==null?'—':`${v>0?'+':''}${(v*100).toFixed(0)}%`;
+const pctCls = v => v>0.05?'up':v<-0.05?'dn':'mu';
 
-function totalVol() { return Object.values(DATA).reduce((s,f) => s + f.v, 0); }
-function totalNR() { return Object.values(DATA).reduce((s,f) => s + f.nr_total, 0); }
+function totalVol(){ return Object.values(DATA).reduce((s,f)=>s+f.v,0); }
+function totalNR(){ return Object.values(DATA).reduce((s,f)=>s+f.nr_total,0); }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-function init() {
-  const tv = totalVol();
-  document.getElementById('total-vol').textContent = tv.toLocaleString('fr');
-  document.getElementById('total-fam').textContent = Object.keys(DATA).length;
+function init(){
+  const tv = totalVol(), tf = Object.keys(DATA).length, tn = totalNR();
+  document.getElementById('sb-vol').textContent = tv.toLocaleString('fr');
+  document.getElementById('sb-fam').textContent = tf;
+  document.getElementById('sb-nr').textContent = tn;
+  document.getElementById('snav-univers-count').textContent = tf;
   renderFamilies();
   renderAlerts();
   renderTrends();
 }
 
-// ── FAMILIES VIEW ──────────────────────────────────────────────────────────────
-function renderFamilies() {
-  const fams = Object.entries(DATA).sort((a,b) => b[1].v - a[1].v);
-  document.getElementById('fam-count-label').textContent = `${fams.length} univers · ${totalVol().toLocaleString('fr')} rech.`;
-
-  const html = fams.map(([name, fd]) => {
-    const topTrend = Object.values(fd.subfams).filter(sf => sf.trend).sort((a,b)=>b.trend.pct - a.trend.pct)[0];
+// ── FAMILIES ──────────────────────────────────────────────────────────────────
+function renderFamilies(){
+  const fams = Object.entries(DATA).sort((a,b)=>b[1].v-a[1].v);
+  document.getElementById('fam-sub').textContent = `${fams.length} univers · ${totalVol().toLocaleString('fr')} recherches · Avril 2026 FR`;
+  document.getElementById('fam-grid').innerHTML = fams.map(([name,fd])=>{
+    const trends = Object.values(fd.subfams).filter(sf=>sf.trend).sort((a,b)=>b.trend.pct-a.trend.pct);
+    const topTrend = trends[0];
+    const fillW = Math.round(fd.d*100);
+    const bc = fd.d>=0.6?'#c03020':fd.d>=0.48?'#d4880a':'#60a830';
     return `<div class="fam-card" onclick="openFamily('${name.replace(/'/g,"\\'")}')">
-      <div class="fam-icon">${fd.icon}</div>
-      <div class="fam-body">
-        <div class="fam-name">${name}</div>
-        <div class="fam-meta">
-          <span>${fd.v.toLocaleString('fr')} rech.</span>
-          <span>·</span>
-          <span class="fam-disp ${dispColor(fd.d)}">${(fd.d*100).toFixed(1)}% disp.</span>
+      <div class="fc-top">
+        <div class="fc-icon">${fd.icon}</div>
+        <div class="fc-badges">
+          ${fd.nr_total>0?`<span class="fc-nr">⊘ ${fd.nr_total} non couverts</span>`:''}
+          ${topTrend?`<span class="fc-trend">↑ ${topTrend.trend.t}</span>`:''}
         </div>
       </div>
-      <div class="fam-right">
-        <span class="fam-arrow">›</span>
-        ${fd.nr_total > 0 ? `<span class="fam-nr">⊘ ${fd.nr_total} non couverts</span>` : ''}
-        ${topTrend ? `<span class="fam-trend">↑ ${topTrend.trend.t}</span>` : ''}
+      <div class="fc-name">${name}</div>
+      <div class="fc-meta">
+        <span>${fd.v.toLocaleString('fr')} rech.</span>
+        <span>·</span>
+        <span class="fc-disp ${dispCls(fd.d)}">${(fd.d*100).toFixed(1)}% disp.</span>
+        <span>·</span>
+        <span>${Object.keys(fd.subfams).length} sous-familles</span>
       </div>
+      <div class="fc-bar"><div class="fc-bar-fill" style="width:${fillW}%;background:${bc}"></div></div>
     </div>`;
   }).join('');
-
-  document.getElementById('fam-list').innerHTML = html;
 }
 
-function openFamily(name) {
-  state.currentFam = name;
-  state.view = 'subfamilies';
-  renderSubfamilies(name);
-  document.getElementById('view-families').style.display = 'none';
-  document.getElementById('view-subfamilies').style.display = 'block';
-  document.getElementById('view-detail').style.display = 'none';
-  window.scrollTo(0,0);
-}
-
-function showFamilies() {
-  state.view = 'families';
-  document.getElementById('view-families').style.display = 'block';
-  document.getElementById('view-subfamilies').style.display = 'none';
-  document.getElementById('view-detail').style.display = 'none';
-}
-
-// ── SUBFAMILIES VIEW ──────────────────────────────────────────────────────────
-function renderSubfamilies(famName) {
-  const fd = DATA[famName];
-  const totalSfVol = Object.values(fd.subfams).reduce((s,sf)=>s+sf.v,0);
-
+function openFamily(name){
+  S.fam = name; S.panel = 'subfamilies';
+  const fd = DATA[name];
+  setBreadcrumb([{label:'Univers',fn:'showPanel("families")'},name]);
   document.getElementById('fam-hero').innerHTML = `
-    <div class="fh-tag">${fd.icon} ${famName}</div>
-    <div class="fh-name">${famName}</div>
-    <div class="fh-kpis">
-      <div class="fh-kpi">
-        <div class="fhk-n">${fd.v.toLocaleString('fr')}</div>
-        <div class="fhk-l">Recherches</div>
-      </div>
-      <div class="fh-kpi fhk-accent">
-        <div class="fhk-n">${(fd.d*100).toFixed(1)}%</div>
-        <div class="fhk-l">Dispersion</div>
-      </div>
-      <div class="fh-kpi">
-        <div class="fhk-n">${fd.nr_total}</div>
-        <div class="fhk-l">Non couverts</div>
-      </div>
-    </div>
-  `;
-
-  const sfHtml = Object.entries(fd.subfams).sort((a,b)=>b[1].v-a[1].v).map(([sfName, sf]) => {
-    const fillPct = Math.min(sf.d * 100, 100);
-    const bc = barColor(sf.d);
-    return `<div class="sf-card" onclick="openDetail('${famName.replace(/'/g,"\\'")}','${sfName.replace(/'/g,"\\'")}')">
-      <div class="sf-bar">
-        <div class="sf-bar-fill ${bc}" style="width:${fillPct}%"></div>
-      </div>
+    <div class="hero-label">${fd.icon} Univers</div>
+    <div class="hero-title">${name}</div>
+    <div class="hero-kpis">
+      <div class="hkpi"><div class="hkpi-n">${fd.v.toLocaleString('fr')}</div><div class="hkpi-l">Recherches</div></div>
+      <div class="hkpi accent"><div class="hkpi-n">${(fd.d*100).toFixed(1)}%</div><div class="hkpi-l">Dispersion moy.</div></div>
+      <div class="hkpi"><div class="hkpi-n">${fd.nr_total}</div><div class="hkpi-l">Non couverts</div></div>
+    </div>`;
+  document.getElementById('sf-list').innerHTML = Object.entries(fd.subfams).sort((a,b)=>b[1].v-a[1].v).map(([sfn,sf])=>{
+    const fillH = Math.round(sf.d*100);
+    const bc = sf.d>=0.6?'#c03020':sf.d>=0.48?'#d4880a':'#60a830';
+    return `<div class="sf-card" onclick="openDetail('${name.replace(/'/g,"\\'")}','${sfn.replace(/'/g,"\\'")}')">
+      <div class="sf-bar-v"><div class="sf-bar-fill-v" style="height:${fillH}%;background:${bc}"></div></div>
       <div class="sf-body">
-        <div class="sf-name">${sfName}</div>
+        <div class="sf-name">${sfn}</div>
         <div class="sf-meta">
           <span>${sf.v.toLocaleString('fr')} rech.</span>
-          <span>·</span>
-          <span class="${dispColor(sf.d)}">${(sf.d*100).toFixed(1)}%</span>
-          ${sf.nr.length > 0 ? `<span>· <span style="color:var(--alert)">⊘ ${sf.nr.length}</span></span>` : ''}
+          <span class="${dispCls(sf.d)}">${(sf.d*100).toFixed(1)}% disp.</span>
         </div>
       </div>
-      ${sf.trend ? `<span style="font-size:11px;color:var(--trend);font-family:'DM Mono',monospace">↑ ${pct(sf.trend.pct,true)}</span>` : ''}
-      <span style="color:var(--k4);font-size:14px">›</span>
+      <div class="sf-right">
+        ${sf.trend?`<span class="sf-trend-badge">↑ ${pct(sf.trend.pct)}</span>`:''}
+        ${sf.nr.length>0?`<span class="sf-nr-badge">⊘ ${sf.nr.length}</span>`:''}
+        <span class="sf-arrow">›</span>
+      </div>
     </div>`;
   }).join('');
-
-  document.getElementById('sf-list').innerHTML = sfHtml;
+  showPanel('subfamilies');
 }
 
-// ── DETAIL VIEW ───────────────────────────────────────────────────────────────
-function openDetail(famName, sfName) {
-  state.currentFam = famName;
-  state.currentSf = sfName;
-  state.view = 'detail';
-
-  document.getElementById('view-families').style.display = 'none';
-  document.getElementById('view-subfamilies').style.display = 'none';
-  document.getElementById('view-detail').style.display = 'block';
-
-  document.getElementById('detail-back-btn').onclick = () => openFamily(famName);
-  document.getElementById('detail-back-label').textContent = famName;
-
-  renderDetail(famName, sfName);
-  window.scrollTo(0,0);
-}
-
-function renderDetail(famName, sfName) {
+function openDetail(famName, sfName){
+  S.fam=famName; S.sf=sfName; S.panel='detail';
   const sf = DATA[famName].subfams[sfName];
-  const icon = DATA[famName].icon;
+  setBreadcrumb([{label:'Univers',fn:'showPanel("families")'},{label:famName,fn:`openFamily('${famName.replace(/'/g,"\\'")}')`},sfName]);
 
-  // Hero
-  document.getElementById('sf-hero').innerHTML = `
-    <div class="sfh-label">${icon} ${famName}</div>
-    <div class="sfh-name">${sfName}</div>
-    <div class="sfh-stats">
-      <div class="sfh-stat">
-        <div class="sfhs-n">${sf.v.toLocaleString('fr')}</div>
-        <div class="sfhs-l">Recherches</div>
-      </div>
-      <div class="sfh-stat">
-        <div class="sfhs-n" style="color:${sf.d>=0.55?'var(--alert)':sf.d>=0.45?'var(--warn)':'var(--ok)'}">${(sf.d*100).toFixed(1)}%</div>
-        <div class="sfhs-l">Dispersion</div>
-      </div>
-      <div class="sfh-stat">
-        <div class="sfhs-n" style="color:var(--alert)">${sf.nr.length}</div>
-        <div class="sfhs-l">Non couverts</div>
-      </div>
-    </div>
-  `;
-
-  // Demand sections
-  const topTerms = sf.terms.slice(0, 8);
-  const maxVol = topTerms[0]?.v || 1;
-
-  const coveredHtml = topTerms.map(t => {
-    const barW = Math.round((t.v / maxVol) * 100);
-    const pctVal = t.pct;
-    const pctClass = pctVal > 0.1 ? 'pct-up' : pctVal < -0.1 ? 'pct-dn' : 'pct-flat';
-    return `<div class="term-row">
-      <span class="term-name">${t.t}</span>
-      <span class="term-vol">${t.v}</span>
-      <div class="term-bar-wrap">
-        <div class="term-bar"><div class="term-bar-fill ${termBarColor(t.d)}" style="width:${Math.round(t.d*100)}%"></div></div>
-        <div style="font-size:9px;color:var(--k4);text-align:right;margin-top:1px;font-family:'DM Mono',monospace">${(t.d*100).toFixed(0)}%</div>
-      </div>
-      <span class="term-pct ${pctClass}">${pctVal > 0 ? '+' : ''}${(pctVal*100).toFixed(0)}%</span>
+  document.getElementById('sf-hero-block').innerHTML = `
+    <div class="hero-label">${DATA[famName].icon} ${famName}</div>
+    <div class="hero-title">${sfName}</div>
+    <div class="hero-kpis">
+      <div class="hkpi"><div class="hkpi-n">${sf.v.toLocaleString('fr')}</div><div class="hkpi-l">Recherches</div></div>
+      <div class="hkpi ${sf.d>=0.55?'accent':''}"><div class="hkpi-n">${(sf.d*100).toFixed(1)}%</div><div class="hkpi-l">Dispersion</div></div>
+      <div class="hkpi"><div class="hkpi-n" style="color:var(--alert)">${sf.nr.length}</div><div class="hkpi-l">Non couverts</div></div>
     </div>`;
-  }).join('');
 
-  const uncoveredHtml = sf.nr.length === 0
-    ? `<div class="empty-msg">✓ Aucun terme sans résultat</div>`
-    : sf.nr.map(nr => `
-      <div class="nr-row">
-        <span class="nr-icon">⊘</span>
-        <span class="nr-name">${nr.t}</span>
-        <span class="nr-vol">${nr.v} rech.</span>
-      </div>`).join('');
+  const maxV = sf.terms[0]?.v||1;
+  const covHtml = `
+    <div class="demand-block">
+      <div class="db-header">
+        <span class="db-dot covered"></span>
+        <span class="db-title">Demande active — termes avec résultats</span>
+        <span class="db-count">${sf.terms.length} termes</span>
+      </div>
+      <div class="db-cols"><span>Terme</span><span>Vol.</span><span>Dispersion</span><span>Évol. N-1</span><span>Conv.</span></div>
+      ${sf.terms.map(t=>`
+        <div class="term-row">
+          <span class="term-name">${t.t}</span>
+          <span class="term-vol">${t.v}</span>
+          <div class="term-bar-cell">
+            <div class="term-bar"><div class="term-bar-fill ${barCls(t.d)}" style="width:${Math.round(t.d*100)}%"></div></div>
+            <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);width:30px;flex-shrink:0">${(t.d*100).toFixed(0)}%</span>
+          </div>
+          <span class="term-pct-cell ${pctCls(t.pct)}">${pct(t.pct)}</span>
+          <span class="term-conv">${(t.cr*100).toFixed(1)}%</span>
+        </div>`).join('')}
+    </div>`;
 
-  document.getElementById('demand-sections').innerHTML = `
-    <div class="demand-section">
-      <div class="ds-header">
-        <span class="ds-dot covered"></span>
-        <span class="ds-title">Demande active — termes avec résultats</span>
-        <span class="ds-count">${topTerms.length}</span>
+  const nrHtml = `
+    <div class="demand-block">
+      <div class="db-header" style="background:var(--alert-bg)">
+        <span class="db-dot uncovered"></span>
+        <span class="db-title" style="color:var(--alert)">Demande non couverte — no result</span>
+        <span class="db-count">${sf.nr.length} termes</span>
       </div>
-      <div style="margin-bottom:4px;display:flex;gap:12px;padding:0 2px 6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--k4)">
-        <span>terme</span><span style="margin-left:auto">vol · disp% · évol.</span>
-      </div>
-      ${coveredHtml}
-    </div>
-    <div class="demand-section">
-      <div class="ds-header">
-        <span class="ds-dot uncovered"></span>
-        <span class="ds-title">Demande non couverte — no result</span>
-        <span class="ds-count">${sf.nr.length}</span>
-      </div>
-      ${uncoveredHtml}
-    </div>
-  `;
+      ${sf.nr.length===0
+        ?'<div class="empty" style="padding:1.5rem">✓ Aucun terme sans résultat</div>'
+        :sf.nr.map(nr=>`<div class="nr-row"><span class="nr-icon">⊘</span><span class="nr-name">${nr.t}</span><span class="nr-vol">${nr.v} rech.</span></div>`).join('')}
+    </div>`;
 
-  // Signals
+  document.getElementById('demand-left').innerHTML = covHtml + nrHtml;
+  showPanel('detail');
   generateSignals(famName, sfName, sf);
 }
 
-async function generateSignals(famName, sfName, sf) {
-  const cacheKey = `${famName}::${sfName}`;
-  document.getElementById('sig-loading').style.display = 'flex';
-  document.getElementById('signals-content').innerHTML = '';
+function showPanel(p){
+  S.panel=p;
+  ['families','subfamilies','detail'].forEach(id=>{
+    document.getElementById(`panel-${id}`).style.display = id===p?'block':'none';
+  });
+  window.scrollTo(0,0);
+}
 
-  if (state.signals[cacheKey]) {
-    renderSignals(state.signals[cacheKey]);
-    return;
-  }
-
-  const topTerms = sf.terms.slice(0,6).map(t=>`${t.t} (${t.v} rech, disp ${(t.d*100).toFixed(0)}%, évol ${t.pct>0?'+':''}${(t.pct*100).toFixed(0)}%)`).join('; ');
-  const noResult = sf.nr.slice(0,5).map(t=>t.t).join(', ') || 'aucun';
-  const trend = sf.trend ? `terme en forte hausse: ${sf.trend.t} (${pct(sf.trend.pct,true)})` : 'aucun signal fort';
-  const avgDisp = (sf.d*100).toFixed(1);
-
-  const prompt = `Tu es un catégorie manager B2B en eMerchandising. Analyse ces données search pour la sous-famille "${sfName}" (univers ${famName}) et génère 3 signaux actionnables concis.
-
-Termes principaux: ${topTerms}
-Termes sans résultat: ${noResult}
+// ── SIGNALS ───────────────────────────────────────────────────────────────────
+async function generateSignals(famName, sfName, sf){
+  const key = `${famName}::${sfName}`;
+  document.getElementById('sig-loading').style.display='flex';
+  document.getElementById('signals-content').innerHTML='';
+  if(S.signals[key]){renderSignals(S.signals[key]);return;}
+  const top = sf.terms.slice(0,5).map(t=>`${t.t} (${t.v} rech, disp ${(t.d*100).toFixed(0)}%, ${pct(t.pct)})`).join('; ');
+  const nr = sf.nr.slice(0,4).map(t=>t.t).join(', ')||'aucun';
+  const trend = sf.trend?`hausse forte: ${sf.trend.t} (${pct(sf.trend.pct)})`:'aucun';
+  const prompt = `Tu es catégorie manager B2B eMerchandising. Analyse pour la sous-famille "${sfName}" (univers ${famName}).
+Termes: ${top}
+Sans résultat: ${nr}
 Tendance: ${trend}
-Dispersion moy: ${avgDisp}%
+Dispersion moy: ${(sf.d*100).toFixed(1)}%
 
-Format: 3 signaux courts (1-2 phrases chacun), style catman direct. Commence chaque signal par une observation concrète puis une question ou action. Distingue bien: trous d'offre (no result), problèmes de contenu (dispersion haute), opportunités (croissance). Pas de titre, juste les 3 signaux séparés par des retours à la ligne. Mise en gras pour les termes clés. En français.`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514', max_tokens:400,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
+Génère 3 signaux actionnables courts (1-2 phrases). Direct, style catman. Distingue trous d'offre, problèmes contenu, opportunités croissance. Pas de titre. Gras pour termes clés. Séparés par ligne vide. Français.`;
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})});
     const data = await res.json();
-    const text = data.content?.find(b=>b.type==='text')?.text || '';
-    state.signals[cacheKey] = text;
-    renderSignals(text);
-  } catch(e) {
-    renderSignals(buildFallbackSignals(sfName, sf));
+    const text = data.content?.find(b=>b.type==='text')?.text||'';
+    S.signals[key]=text; renderSignals(text);
+  }catch(e){
+    const fb = buildFB(sfName,sf); S.signals[key]=fb; renderSignals(fb);
   }
 }
 
-function buildFallbackSignals(sfName, sf) {
-  const lines = [];
-  const urgent = sf.terms.filter(t=>t.d>0.6&&t.v>50);
-  if (urgent.length) lines.push(`**${urgent[0].t}** (disp. ${(urgent[0].d*100).toFixed(0)}%) : fort volume sans conversion — le contenu produit répond-il à l'intention de recherche ?`);
-  if (sf.nr.length > 0) lines.push(`**Demande non couverte** : ${sf.nr.slice(0,2).map(t=>t.t).join(', ')} — ces termes génèrent ${sf.nr.slice(0,2).reduce((s,t)=>s+t.v,0)} recherches sans résultat. L'assortiment couvre-t-il ces besoins ?`);
-  if (sf.trend) lines.push(`**${sf.trend.t}** enregistre +${(sf.trend.pct*100).toFixed(0)}% de recherches — signal de montée en demande à surveiller pour le plan d'achat.`);
-  if (lines.length < 2) lines.push(`Dispersion moyenne de **${(sf.d*100).toFixed(1)}%** sur ${sfName} — vérifier la cohérence des intitulés produits avec les termes de recherche clients.`);
+function buildFB(sfName,sf){
+  const lines=[];
+  const u=sf.terms.filter(t=>t.d>0.6&&t.v>50);
+  if(u.length) lines.push(`**${u[0].t}** (disp. ${(u[0].d*100).toFixed(0)}%) — fort volume sans bonne réponse. Le contenu produit couvre-t-il bien l'intention ?`);
+  if(sf.nr.length>0) lines.push(`**Demande non couverte** : ${sf.nr.slice(0,2).map(t=>t.t).join(', ')} — ${sf.nr.slice(0,2).reduce((s,t)=>s+t.v,0)} recherches sans résultat. Vérifier l'assortiment.`);
+  if(sf.trend) lines.push(`**${sf.trend.t}** : +${(sf.trend.pct*100).toFixed(0)}% de recherches — signal de montée en demande à intégrer dans le plan d'achat.`);
+  if(lines.length<2) lines.push(`Dispersion de **${(sf.d*100).toFixed(1)}%** — aligner les intitulés produits avec les termes de recherche clients.`);
   return lines.join('\n\n');
 }
 
-function renderSignals(text) {
-  document.getElementById('sig-loading').style.display = 'none';
-  const signals = text.split(/\n\n+/).filter(s=>s.trim().length > 10);
-  const isTrend = (s) => s.includes('%') && (s.includes('hausse') || s.includes('croissance') || s.includes('monte') || s.includes('+'));
-  const html = signals.slice(0,4).map(sig => {
-    const formatted = sig.trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    return `<div class="signal-item"><div class="sig-text ${isTrend(sig)?'sig-trend':''}">${formatted}</div></div>`;
+function renderSignals(text){
+  document.getElementById('sig-loading').style.display='none';
+  const sigs = text.split(/\n\n+/).filter(s=>s.trim().length>10);
+  const isTrend = s => s.includes('%')&&(s.includes('hausse')||s.includes('croissance')||s.includes('+'));
+  document.getElementById('signals-content').innerHTML = sigs.slice(0,4).map(sig=>`
+    <div class="signal-item">
+      <div class="sig-text ${isTrend(sig)?'sig-trend':''}">${sig.trim().replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
+    </div>`).join('');
+}
+
+// ── ALERTS ────────────────────────────────────────────────────────────────────
+function renderAlerts(){
+  const alerts=[];
+  for(const[fn,fd] of Object.entries(DATA))
+    for(const[sfn,sf] of Object.entries(fd.subfams))
+      if(sf.nr.length>0) alerts.push({fn,sfn,icon:fd.icon,nr:sf.nr});
+  alerts.sort((a,b)=>b.nr.length-a.nr.length);
+  const total = alerts.reduce((s,a)=>s+a.nr.length,0);
+  document.getElementById('alert-sub').textContent=`${total} termes sans résultat sur ${alerts.length} sous-familles`;
+  document.getElementById('snav-alertes-count').textContent=total;
+  document.getElementById('alert-grid').innerHTML=alerts.slice(0,24).map(a=>`
+    <div class="list-card" onclick="openDetail('${a.fn.replace(/'/g,"\\'")}','${a.sfn.replace(/'/g,"\\'")}');setView('univers')">
+      <div class="lc-icon">${a.icon}</div>
+      <div class="lc-body">
+        <div class="lc-name">${a.sfn}</div>
+        <div class="lc-sub">${a.fn}</div>
+        <div class="lc-terms">${a.nr.slice(0,3).map(t=>t.t).join(' · ')}</div>
+      </div>
+      <div class="lc-right"><span class="badge-alert">⊘ ${a.nr.length}</span></div>
+    </div>`).join('');
+}
+
+// ── TRENDS ────────────────────────────────────────────────────────────────────
+function renderTrends(){
+  const trends=[];
+  const seen=new Set();
+  for(const[fn,fd] of Object.entries(DATA))
+    for(const[sfn,sf] of Object.entries(fd.subfams)){
+      if(sf.trend&&sf.trend.pct>0.5&&!seen.has(sf.trend.t)){seen.add(sf.trend.t);trends.push({fn,sfn,icon:fd.icon,trend:sf.trend,d:sf.d});}
+      sf.terms.filter(t=>t.pct>1&&t.v>30&&!seen.has(t.t)).forEach(t=>{seen.add(t.t);trends.push({fn,sfn,icon:fd.icon,trend:{t:t.t,pct:t.pct},d:sf.d,tv:t.v});});
+    }
+  trends.sort((a,b)=>b.trend.pct-a.trend.pct);
+  document.getElementById('trend-sub').textContent=`${trends.length} signaux de croissance détectés`;
+  document.getElementById('snav-tendances-count').textContent=trends.length;
+  document.getElementById('trend-grid').innerHTML=trends.slice(0,24).map(t=>`
+    <div class="list-card" onclick="openDetail('${t.fn.replace(/'/g,"\\'")}','${t.sfn.replace(/'/g,"\\'")}');setView('univers')">
+      <div class="lc-icon">${t.icon}</div>
+      <div class="lc-body">
+        <div class="lc-name">${t.trend.t}</div>
+        <div class="lc-sub">${t.sfn} · ${t.fn}</div>
+        ${t.tv?`<div class="lc-sub" style="color:var(--k4)">${t.tv} recherches</div>`:''}
+      </div>
+      <div class="lc-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <span class="badge-trend">↑ ${pct(t.trend.pct)}</span>
+        <span class="badge-disp">${(t.d*100).toFixed(0)}% disp.</span>
+      </div>
+    </div>`).join('');
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function setView(v){
+  S.view=v;
+  document.querySelectorAll('.tab-view').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`view-${v}`).classList.add('active');
+  ['univers','alertes','tendances'].forEach(id=>{
+    document.getElementById(`snav-${id}`)?.classList.toggle('active',id===v);
+    document.getElementById(`mn-${id}`)?.classList.toggle('active',id===v);
+  });
+  if(v==='univers') setBreadcrumb([S.panel==='families'?{label:'Univers'}:S.panel==='subfamilies'?{label:S.fam}:{label:S.sf}]);
+  else setBreadcrumb([{label:v.charAt(0).toUpperCase()+v.slice(1)}]);
+}
+
+function setBreadcrumb(parts){
+  const el = document.getElementById('breadcrumb');
+  el.innerHTML = parts.map((p,i)=>{
+    if(i===parts.length-1) return `<span class="tb-bc-current">${p.label||p}</span>`;
+    return `<span style="cursor:pointer;color:var(--k3)" onclick="${p.fn||''}">${p.label||p}</span><span class="tb-bc-sep">›</span>`;
   }).join('');
-  document.getElementById('signals-content').innerHTML = html;
 }
 
-// ── ALERTS TAB ───────────────────────────────────────────────────────────────
-function renderAlerts() {
-  const alerts = [];
-  for (const [famName, fd] of Object.entries(DATA)) {
-    for (const [sfName, sf] of Object.entries(fd.subfams)) {
-      if (sf.nr.length > 0) {
-        alerts.push({ famName, sfName, icon: fd.icon, nr: sf.nr, sfVol: sf.v });
-      }
-    }
-  }
-  alerts.sort((a,b) => b.nr.length - a.nr.length);
-
-  document.getElementById('alert-count-label').textContent = `${alerts.reduce((s,a)=>s+a.nr.length,0)} termes non couverts`;
-
-  const html = alerts.slice(0,20).map(a => `
-    <div class="fam-card" style="margin-bottom:8px" onclick="openDetail('${a.famName.replace(/'/g,"\\'")}','${a.sfName.replace(/'/g,"\\'")}')">
-      <div class="fam-icon">${a.icon}</div>
-      <div class="fam-body">
-        <div class="fam-name" style="font-size:13px">${a.sfName}</div>
-        <div class="fam-meta" style="font-size:10px;color:var(--k3)">${a.famName}</div>
-        <div class="fam-meta" style="margin-top:4px">
-          ${a.nr.slice(0,3).map(t=>`<span style="font-size:11px;font-style:italic;color:var(--alert)">${t.t}</span>`).join(' · ')}
-        </div>
-      </div>
-      <div class="fam-right">
-        <span class="fam-nr">⊘ ${a.nr.length}</span>
-      </div>
-    </div>`).join('');
-
-  document.getElementById('alert-list').innerHTML = html;
-}
-
-// ── TRENDS TAB ───────────────────────────────────────────────────────────────
-function renderTrends() {
-  const trends = [];
-  for (const [famName, fd] of Object.entries(DATA)) {
-    for (const [sfName, sf] of Object.entries(fd.subfams)) {
-      if (sf.trend && sf.trend.pct > 0.5) {
-        trends.push({ famName, sfName, icon: fd.icon, trend: sf.trend, sfVol: sf.v, d: sf.d });
-      }
-      // Also pick growing terms
-      sf.terms.filter(t=>t.pct>0.8&&t.v>30).forEach(t => {
-        trends.push({ famName, sfName, icon: fd.icon, trend: {t:t.t,pct:t.pct}, sfVol: sf.v, d: sf.d, termV: t.v });
-      });
-    }
-  }
-  // deduplicate and sort
-  const seen = new Set();
-  const unique = trends.filter(t => { const k = t.trend.t; if(seen.has(k)) return false; seen.add(k); return true; })
-    .sort((a,b) => b.trend.pct - a.trend.pct);
-
-  document.getElementById('trend-count-label').textContent = `${unique.length} signaux détectés`;
-
-  const html = unique.slice(0,25).map(t => `
-    <div class="fam-card" style="margin-bottom:8px" onclick="openDetail('${t.famName.replace(/'/g,"\\'")}','${t.sfName.replace(/'/g,"\\'")}')">
-      <div class="fam-icon">${t.icon}</div>
-      <div class="fam-body">
-        <div class="fam-name" style="font-size:13px">${t.trend.t}</div>
-        <div class="fam-meta" style="font-size:10px">${t.sfName} · ${t.famName}</div>
-      </div>
-      <div class="fam-right">
-        <span class="fam-trend">↑ ${pct(t.trend.pct,true)}</span>
-        <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--k3)">${(t.d*100).toFixed(0)}% disp.</span>
-      </div>
-    </div>`).join('');
-
-  document.getElementById('trend-list').innerHTML = html;
-}
-
-// ── NAVIGATION ────────────────────────────────────────────────────────────────
-function showTab(tab) {
-  state.tab = tab;
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.ah-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`tab-${tab}`).classList.add('active');
-  document.getElementById(`tab-btn-${tab}`).classList.add('active');
-}
-
-function switchNav(nav) {
-  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`bn-${nav}`).classList.add('active');
-  const tabMap = {univers:'familles', alertes:'alertes', tendances:'tendances'};
-  showTab(tabMap[nav]);
-}
-
-// Expose globals
-window.openFamily = openFamily;
-window.openDetail = openDetail;
-window.showFamilies = showFamilies;
-window.showTab = showTab;
-window.switchNav = switchNav;
-
-// Boot
+window.setView=setView; window.openFamily=openFamily; window.openDetail=openDetail; window.showPanel=showPanel;
 init();
 </script>
 </body>
