@@ -1,683 +1,273 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signal Search · Catman · Manutan</title>
+<title>Signal Search · Pilote eMerch · Manutan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --w:#faf9f5;--w2:#f2f0e8;--w3:#e8e4d8;--w4:#d4d0c0;
-  --k:#1a1a14;--k2:#48483a;--k3:#7a7a68;--k4:#adad94;
-  --bd:rgba(26,26,20,.07);--bd2:rgba(26,26,20,.13);
-  --r:8px;--rl:12px;
-  --ok:#1e5c00;--ok-bg:#e8f5e0;--ok-bd:rgba(30,92,0,.15);
-  --warn:#7a4a00;--warn-bg:#fff3e0;--warn-bd:rgba(122,74,0,.18);
-  --alert:#7a1010;--alert-bg:#fdecea;--alert-bd:rgba(122,16,16,.18);
-  --trend:#004a7a;--trend-bg:#e4f0fc;--trend-bd:rgba(0,74,122,.18);
-  --accent:#c84800;
-  --sidebar:260px;
-}
-html{background:var(--k);font-size:15px;color:var(--k);-webkit-font-smoothing:antialiased}
-body{font-family:'DM Sans',sans-serif;background:var(--w);min-height:100vh}
-
-/* ── DESKTOP LAYOUT ── */
-.shell{display:flex;min-height:100vh}
-
-/* SIDEBAR */
-.sidebar{
-  width:var(--sidebar);flex-shrink:0;
-  background:var(--k);
-  display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-  padding:0;
-}
-.sb-top{padding:28px 24px 24px;border-bottom:1px solid rgba(255,255,255,.07)}
-.sb-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.sb-dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
-.sb-title{font-family:'Fraunces',serif;font-size:26px;font-weight:400;color:var(--w);line-height:1.1;letter-spacing:-.4px}
-.sb-title em{font-style:italic;color:rgba(250,249,245,.4)}
-.sb-stats{margin-top:16px;display:flex;gap:16px}
-.sb-stat{font-size:11px;font-family:'DM Mono',monospace}
-.sb-stat-n{color:rgba(250,249,245,.8);font-size:16px;font-weight:500;display:block;line-height:1}
-.sb-stat-l{color:rgba(250,249,245,.3);margin-top:2px;display:block}
-
-.sb-nav{padding:16px 12px;flex:1}
-.sb-nav-label{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(250,249,245,.25);padding:0 12px;margin-bottom:6px}
-.sb-nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 12px;border-radius:var(--r);
-  font-size:13px;color:rgba(250,249,245,.5);
-  cursor:pointer;transition:all .1s;border:none;background:none;
-  width:100%;text-align:left;font-family:'DM Sans',sans-serif;
-  margin-bottom:2px;
-}
-.sb-nav-item:hover{background:rgba(255,255,255,.07);color:rgba(250,249,245,.8)}
-.sb-nav-item.active{background:rgba(255,255,255,.12);color:var(--w);font-weight:500}
-.sb-nav-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0}
-.sb-nav-count{margin-left:auto;font-size:10px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.08);padding:2px 7px;border-radius:999px;color:rgba(250,249,245,.4)}
-.sb-nav-item.active .sb-nav-count{background:rgba(255,255,255,.15);color:rgba(250,249,245,.7)}
-
-.sb-sep{border:none;border-top:1px solid rgba(255,255,255,.06);margin:8px 12px}
-
-.sb-period{padding:16px 24px 20px;border-top:1px solid rgba(255,255,255,.07);margin-top:auto}
-.sb-period-label{font-size:10px;font-family:'DM Mono',monospace;color:rgba(250,249,245,.25);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
-.sb-period-val{font-size:12px;color:rgba(250,249,245,.5)}
-
-/* MAIN */
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
-
-/* TOP BAR */
-.topbar{
-  background:var(--w);border-bottom:1px solid var(--bd);
-  padding:16px 32px;display:flex;align-items:center;gap:16px;
-  position:sticky;top:0;z-index:50;
-}
-.tb-breadcrumb{font-size:13px;color:var(--k3);display:flex;align-items:center;gap:8px}
-.tb-bc-sep{color:var(--k4)}
-.tb-bc-current{color:var(--k);font-weight:500}
-.tb-back{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--k3);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;padding:6px 10px;border-radius:var(--r);transition:all .1s}
-.tb-back:hover{background:var(--w2);color:var(--k)}
-.tb-spacer{flex:1}
-.tb-tabs{display:flex;gap:2px;background:var(--w2);border-radius:999px;padding:3px}
-.tb-tab{padding:5px 16px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;color:var(--k3);border:none;background:none;transition:all .12s;font-family:'DM Sans',sans-serif}
-.tb-tab:hover{color:var(--k)}
-.tb-tab.active{background:var(--k);color:var(--w)}
-
-/* PAGE */
-.page{padding:32px;flex:1}
-
-/* GRID FAMILLES */
-.fam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:4px}
-.fam-card{
-  background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
-  padding:18px 20px;cursor:pointer;transition:all .12s;
-}
-.fam-card:hover{border-color:var(--bd2);background:var(--w2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,26,20,.06)}
-.fc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.fc-icon{font-size:28px}
-.fc-badges{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.fc-nr{font-size:10px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:2px 8px;border-radius:999px}
-.fc-trend{font-size:10px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:2px 8px;border-radius:999px}
-.fc-name{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--k);margin-bottom:6px;letter-spacing:-.2px}
-.fc-meta{display:flex;align-items:center;gap:10px;font-size:12px;font-family:'DM Mono',monospace;color:var(--k3)}
-.fc-disp{font-weight:500}
-.disp-ok{color:var(--ok)}
-.disp-warn{color:var(--warn)}
-.disp-alert{color:var(--alert)}
-.fc-bar{width:100%;height:3px;background:var(--w3);border-radius:2px;margin-top:12px}
-.fc-bar-fill{height:100%;border-radius:2px}
-
-/* HERO SECTION */
-.section-hero{margin-bottom:28px}
-.hero-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-.hero-title{font-family:'Fraunces',serif;font-size:32px;font-weight:400;color:var(--k);letter-spacing:-.4px;line-height:1.1;margin-bottom:16px}
-.hero-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px}
-.hkpi{background:var(--w2);border-radius:var(--rl);padding:14px 18px;border:1px solid var(--bd)}
-.hkpi-n{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--k);line-height:1}
-.hkpi-l{font-size:10px;color:var(--k3);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
-.hkpi.accent .hkpi-n{color:var(--accent)}
-
-/* SUBFAM LIST */
-.sf-list{display:flex;flex-direction:column;gap:8px}
-.sf-card{
-  background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
-  padding:14px 18px;cursor:pointer;transition:all .1s;
-  display:flex;align-items:center;gap:16px;
-}
-.sf-card:hover{border-color:var(--bd2);background:var(--w2)}
-.sf-bar-v{width:4px;height:40px;background:var(--w3);border-radius:2px;flex-shrink:0}
-.sf-bar-fill-v{width:100%;border-radius:2px}
-.sf-body{flex:1;min-width:0}
-.sf-name{font-size:14px;font-weight:500;color:var(--k);margin-bottom:3px}
-.sf-meta{font-size:12px;font-family:'DM Mono',monospace;color:var(--k3);display:flex;gap:10px}
-.sf-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.sf-trend-badge{font-size:11px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:3px 10px;border-radius:999px}
-.sf-nr-badge{font-size:11px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:3px 10px;border-radius:999px}
-.sf-arrow{color:var(--k4);font-size:16px}
-
-/* DETAIL LAYOUT */
-.detail-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
-@media(max-width:1100px){.detail-layout{grid-template-columns:1fr}}
-
-/* DEMAND SECTIONS */
-.demand-block{background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);overflow:hidden;margin-bottom:16px}
-.db-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--bd);background:var(--w2)}
-.db-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.db-dot.covered{background:var(--trend)}
-.db-dot.uncovered{background:var(--alert)}
-.db-title{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--k2)}
-.db-count{margin-left:auto;font-size:11px;font-family:'DM Mono',monospace;color:var(--k4)}
-.db-cols{display:grid;grid-template-columns:1fr 60px 80px 80px 60px;gap:0;padding:8px 18px 4px;font-size:10px;font-family:'DM Mono',monospace;color:var(--k4);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--bd)}
-
-.term-row{
-  display:grid;grid-template-columns:1fr 60px 80px 80px 60px;
-  align-items:center;gap:0;padding:10px 18px;
-  border-bottom:1px solid var(--bd);transition:background .08s;
-}
-.term-row:last-child{border-bottom:none}
-.term-row:hover{background:var(--w2)}
-.term-name{font-size:13px;font-weight:500;color:var(--k)}
-.term-vol{font-size:12px;font-family:'DM Mono',monospace;color:var(--k2)}
-.term-bar-cell{display:flex;align-items:center;gap:6px}
-.term-bar{flex:1;height:4px;background:var(--w3);border-radius:2px}
-.term-bar-fill{height:100%;border-radius:2px}
-.tbd-ok{background:#60a830}
-.tbd-warn{background:#d4880a}
-.tbd-alert{background:#c03020}
-.term-pct-cell{font-size:12px;font-family:'DM Mono',monospace;text-align:right}
-.up{color:var(--ok)}
-.dn{color:var(--alert)}
-.mu{color:var(--k4)}
-.term-conv{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);text-align:right}
-
-.nr-row{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 18px;border-bottom:1px solid var(--alert-bd);
-  background:var(--alert-bg);
-}
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[data-theme="light"]{--bg:#faf9f5;--bg2:#f2f0e8;--bg3:#e8e4d8;--ink:#1a1a14;--ink2:#48483a;--ink3:#7a7a68;--ink4:#adad94;--bd:rgba(26,26,20,.07);--bd2:rgba(26,26,20,.14);--sb-bg:#1a1a14;--sb-ink:rgba(250,249,245,.9);--sb-ink2:rgba(250,249,245,.4);--sb-ink3:rgba(250,249,245,.18);--card:#faf9f5;--card-h:#f2f0e8}
+[data-theme="dark"]{--bg:#111108;--bg2:#1a1a10;--bg3:#242418;--ink:#f0efe8;--ink2:#b8b6a8;--ink3:#808070;--ink4:#585848;--bd:rgba(240,239,232,.07);--bd2:rgba(240,239,232,.14);--sb-bg:#080806;--sb-ink:rgba(240,239,232,.9);--sb-ink2:rgba(240,239,232,.4);--sb-ink3:rgba(240,239,232,.15);--card:#1a1a10;--card-h:#242418}
+:root{--g:#1a5200;--g-bg:#e4f0d8;--g-bd:rgba(26,82,0,.15);--o:#7a4400;--o-bg:#fff0e0;--o-bd:rgba(122,68,0,.18);--r:#7a1010;--r-bg:#fdecea;--r-bd:rgba(122,16,16,.18);--n:#4a4a3a;--n-bg:#f0ede4;--n-bd:rgba(74,74,58,.15);--acc:#c84800;--sw:248px;--th:52px}
+html{font-size:14px;-webkit-font-smoothing:antialiased;background:var(--bg)}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;transition:background .2s,color .2s}
+.shell{display:grid;grid-template-columns:var(--sw) 1fr;min-height:100vh}
+.sidebar{background:var(--sb-bg);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:background .2s}
+.sb-brand{padding:22px 18px 18px;border-bottom:1px solid var(--sb-ink3)}
+.sb-pilot{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--sb-ink3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.sb-pdot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0}
+.sb-title{font-family:'Fraunces',serif;font-size:22px;font-weight:400;line-height:1.1;letter-spacing:-.3px}
+.sb-title span{color:var(--sb-ink)}
+.sb-title em{font-style:italic;color:var(--sb-ink2)}
+.sb-period{font-size:10px;font-family:'DM Mono',monospace;color:var(--sb-ink3);margin-top:8px}
+.sb-stats{display:flex;border-top:1px solid var(--sb-ink3);border-bottom:1px solid var(--sb-ink3)}
+.sb-stat{flex:1;padding:10px 14px;border-right:1px solid var(--sb-ink3)}
+.sb-stat:last-child{border-right:none}
+.sb-sn{font-family:'Fraunces',serif;font-size:17px;font-weight:300;color:var(--sb-ink);display:block;line-height:1}
+.sb-sl{font-size:9px;font-family:'DM Mono',monospace;color:var(--sb-ink3);margin-top:2px;display:block;text-transform:uppercase;letter-spacing:.06em}
+.sb-nav{padding:10px;flex:1}
+.sb-ns{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sb-ink3);padding:8px 10px 4px}
+.sb-ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:12.5px;color:var(--sb-ink2);cursor:pointer;transition:all .1s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;margin-bottom:1px}
+.sb-ni:hover{background:rgba(255,255,255,.06);color:var(--sb-ink)}
+.sb-ni.active{background:rgba(255,255,255,.1);color:var(--sb-ink)}
+.sb-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.sb-nl{flex:1}
+.sb-nd{font-size:10px;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.sb-nd.ok{background:var(--g-bg);color:var(--g)}.sb-nd.neutral{background:var(--n-bg);color:var(--n)}.sb-nd.warn{background:var(--o-bg);color:var(--o)}.sb-nd.alert{background:var(--r-bg);color:var(--r)}
+.sb-bot{padding:12px 14px 14px;border-top:1px solid var(--sb-ink3);margin-top:auto}
+.tbtn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid var(--sb-ink3);border-radius:7px;padding:7px 12px;color:var(--sb-ink2);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;transition:all .1s}
+.tbtn:hover{background:rgba(255,255,255,.1);color:var(--sb-ink)}
+.main{min-width:0;display:flex;flex-direction:column;background:var(--bg);transition:background .2s}
+.topbar{height:var(--th);background:var(--bg);border-bottom:1px solid var(--bd);padding:0 24px;display:flex;align-items:center;gap:4px;position:sticky;top:0;z-index:50;transition:background .2s}
+.bci{font-size:13px;color:var(--ink3);cursor:pointer;transition:color .1s;border:none;background:none;font-family:'DM Sans',sans-serif;padding:0}
+.bci:hover{color:var(--ink)}
+.bci.cur{color:var(--ink);font-weight:500;cursor:default}
+.bcs{color:var(--ink4);font-size:12px;margin:0 2px}
+.page{padding:24px 24px 80px;flex:1}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:10px}
+.fc{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px 17px;cursor:pointer;transition:all .12s}
+.fc:hover{border-color:var(--bd2);background:var(--card-h);transform:translateY(-1px)}
+.fc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
+.fc-icon{font-size:24px;line-height:1}
+.fc-nr{font-size:10px;font-family:'DM Mono',monospace;background:var(--r-bg);color:var(--r);padding:2px 8px;border-radius:999px;border:1px solid var(--r-bd)}
+.fc-name{font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--ink);letter-spacing:-.2px;margin-bottom:7px}
+.fc-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.fc-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3)}
+.dc{font-size:11px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:6px;font-weight:500}
+.ok{background:var(--g-bg);color:var(--g);border:1px solid var(--g-bd)}.neutral{background:var(--n-bg);color:var(--n);border:1px solid var(--n-bd)}.warn{background:var(--o-bg);color:var(--o);border:1px solid var(--o-bd)}.alert{background:var(--r-bg);color:var(--r);border:1px solid var(--r-bd)}
+.bok{background:#3d9a18}.bneutral{background:#9a9068}.bwarn{background:#d47a0a}.balert{background:#c03020}
+.fc-bar{width:100%;height:3px;background:var(--bg3);border-radius:2px;margin-top:10px}
+.fc-barf{height:100%;border-radius:2px}
+.fc-kw{font-size:11px;color:var(--ink4);margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptitle{font-family:'Fraunces',serif;font-size:28px;font-weight:400;letter-spacing:-.4px;color:var(--ink);line-height:1.1}
+.sf-list{display:flex;flex-direction:column;gap:7px;max-width:820px}
+.sfi{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 15px;cursor:pointer;transition:all .1s;display:flex;align-items:center;gap:12px}
+.sfi:hover{border-color:var(--bd2);background:var(--card-h)}
+.sfbv{width:4px;height:34px;background:var(--bg3);border-radius:2px;flex-shrink:0;overflow:hidden;position:relative}
+.sfbvf{position:absolute;bottom:0;left:0;width:100%;border-radius:2px}
+.sfb{flex:1;min-width:0}
+.sfn{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px}
+.sfm{display:flex;align-items:center;gap:8px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3)}
+.sfr{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.sfdc{font-size:11px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:6px;font-weight:500}
+.sfnr{font-size:11px;font-family:'DM Mono',monospace;background:var(--r-bg);color:var(--r);padding:3px 8px;border-radius:6px;border:1px solid var(--r-bd)}
+.sfarr{color:var(--ink4);font-size:14px}
+.krow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.kb{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 15px;min-width:85px;text-align:center}
+.kn{font-family:'Fraunces',serif;font-size:21px;font-weight:300;line-height:1}
+.kl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink4);margin-top:3px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.blk{background:var(--card);border:1px solid var(--bd);border-radius:11px;overflow:hidden}
+.bh{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--bg2)}
+.bhdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.bhdot.t{background:#2563a8}.bhdot.n{background:var(--r)}
+.bhtit{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2)}
+.bhct{margin-left:auto;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink4)}
+.colh{display:grid;grid-template-columns:1fr 96px 58px 44px;gap:0;padding:5px 14px;font-size:9px;font-family:'DM Mono',monospace;color:var(--ink4);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bd)}
+.tr{display:grid;grid-template-columns:1fr 96px 58px 44px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--bd);transition:background .08s}
+.tr:last-child{border-bottom:none}
+.tr:hover{background:var(--bg2)}
+.tn{font-size:12.5px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:5px}
+.thot{font-size:10px;color:var(--g);font-family:'DM Mono',monospace}
+.vc{display:flex;align-items:center;gap:5px}
+.vn{font-size:12px;font-family:'DM Mono',monospace;color:var(--ink2);width:30px;text-align:right;flex-shrink:0}
+.vev{font-size:10px;font-family:'DM Mono',monospace;width:36px;flex-shrink:0}
+.eu{color:var(--g)}.ed{color:var(--r)}.ef{color:var(--ink4)}
+.dcc{display:flex;align-items:center;gap:4px}
+.dbar{width:30px;height:4px;background:var(--bg3);border-radius:2px;flex-shrink:0}
+.dbarf{height:100%;border-radius:2px}
+.dpct{font-size:11px;font-family:'DM Mono',monospace;width:25px;flex-shrink:0}
+.ccv{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);text-align:right}
+.nr-row{display:flex;align-items:center;gap:9px;padding:9px 14px;border-bottom:1px solid var(--r-bd);background:var(--r-bg)}
 .nr-row:last-child{border-bottom:none}
-.nr-icon{color:var(--alert);font-size:12px;flex-shrink:0}
-.nr-name{font-size:13px;color:var(--alert);font-style:italic;flex:1}
-.nr-vol{font-size:11px;font-family:'DM Mono',monospace;color:var(--alert);opacity:.7}
-
-/* SIGNALS CARD */
-.signals-card{background:var(--k);border-radius:var(--rl);padding:20px 22px;position:sticky;top:80px}
-.sc-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.sc-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(250,249,245,.3)}
-.sc-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);display:block;margin-left:8px}
-.signal-item{margin-bottom:10px}
-.signal-item:last-child{margin-bottom:0}
-.sig-text{font-size:12.5px;line-height:1.65;color:rgba(250,249,245,.8);font-weight:300;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:var(--r);border-left:2px solid rgba(250,249,245,.12)}
-.sig-text strong{font-weight:600;color:var(--w)}
-.sig-trend{border-left-color:rgba(200,72,0,.7);background:rgba(200,72,0,.08)}
-.sig-loading{display:flex;align-items:center;gap:8px;color:rgba(250,249,245,.3);font-size:12px;padding:4px 0}
-.sig-ld-dot{width:5px;height:5px;border-radius:50%;background:rgba(250,249,245,.3);animation:blink 1.2s ease infinite}
-.sig-ld-dot:nth-child(2){animation-delay:.2s}
-.sig-ld-dot:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
-
-/* ALERTS + TRENDS */
-.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
-.list-card{
-  background:var(--w);border:1px solid var(--bd);border-radius:var(--rl);
-  padding:14px 16px;cursor:pointer;transition:all .1s;
-  display:flex;align-items:center;gap:12px;
-}
-.list-card:hover{border-color:var(--bd2);background:var(--w2)}
-.lc-icon{font-size:22px;width:40px;height:40px;background:var(--w2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.lc-body{flex:1;min-width:0}
-.lc-name{font-size:13px;font-weight:500;color:var(--k);margin-bottom:2px}
-.lc-sub{font-size:11px;color:var(--k3);margin-bottom:4px}
-.lc-terms{font-size:11px;color:var(--alert);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lc-right{flex-shrink:0}
-.badge-alert{font-size:11px;font-family:'DM Mono',monospace;background:var(--alert-bg);color:var(--alert);padding:3px 10px;border-radius:999px}
-.badge-trend{font-size:11px;font-family:'DM Mono',monospace;background:var(--trend-bg);color:var(--trend);padding:3px 10px;border-radius:999px}
-.badge-disp{font-size:11px;font-family:'DM Mono',monospace;color:var(--k3)}
-
-/* PAGE HEADER */
-.page-header{margin-bottom:24px}
-.ph-title{font-family:'Fraunces',serif;font-size:28px;font-weight:400;color:var(--k);letter-spacing:-.3px}
-.ph-sub{font-size:13px;color:var(--k3);margin-top:4px;font-family:'DM Mono',monospace}
-
-/* EMPTY */
-.empty{text-align:center;padding:3rem;color:var(--k3);font-size:13px}
-
-/* ── MOBILE ── */
-@media(max-width:768px){
-  .sidebar{display:none}
-  .topbar{padding:12px 16px}
-  .page{padding:16px}
-  .fam-grid{grid-template-columns:1fr}
-  .hero-kpis{grid-template-columns:repeat(3,1fr)}
-  .detail-layout{grid-template-columns:1fr}
-  .signals-card{position:static}
-  .db-cols{display:none}
-  .term-row{grid-template-columns:1fr 50px 70px 50px;gap:0}
-  .term-conv{display:none}
-  .ph-title{font-size:22px}
-  .mobile-nav{display:flex}
-}
-
-/* MOBILE NAV */
-.mobile-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--w);border-top:1px solid var(--bd);
-  z-index:100;padding-bottom:env(safe-area-inset-bottom,0);
-}
-.mn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
-.mn-icon{font-size:18px;line-height:1}
-.mn-label{font-size:10px;font-weight:500;color:var(--k3)}
-.mn-item.active .mn-label{color:var(--k)}
-
-/* MOBILE TOPBAR */
-.mobile-header{
-  display:none;background:var(--k);
-  padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 14px;
-  position:sticky;top:0;z-index:100;
-}
-@media(max-width:768px){
-  .mobile-header{display:flex;align-items:center;justify-content:space-between}
-  body{padding-bottom:60px}
-}
-.mh-title{font-family:'Fraunces',serif;font-size:18px;font-weight:400;color:var(--w)}
-.mh-title em{font-style:italic;color:rgba(250,249,245,.4)}
-.mh-right{font-size:11px;font-family:'DM Mono',monospace;color:rgba(250,249,245,.35)}
-
-/* Tab views */
-.tab-view{display:none}
-.tab-view.active{display:block}
+.nr-ic{font-size:11px;color:var(--r);flex-shrink:0;font-family:'DM Mono',monospace}
+.nr-nm{font-size:12.5px;color:var(--r);font-style:italic;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nr-vl{font-size:11px;font-family:'DM Mono',monospace;color:var(--r);opacity:.7;flex-shrink:0}
+.nr-em{padding:14px;text-align:center;font-size:12px;color:var(--ink4)}
+.ph{margin-bottom:20px}
+@media(max-width:760px){.shell{display:block}.sidebar{display:none}.mhdr{display:flex}.topbar{padding:0 14px}.page{padding:14px 14px 80px}.fg{grid-template-columns:1fr}.dgrid{grid-template-columns:1fr}.colh,.tr{grid-template-columns:1fr 86px 50px}.ccv{display:none}}
+.mhdr{display:none;background:var(--sb-bg);padding:calc(env(safe-area-inset-top,0px) + 11px) 15px 11px;position:sticky;top:0;z-index:100;align-items:center;justify-content:space-between}
+.mht{font-family:'Fraunces',serif;font-size:17px;font-weight:400;color:var(--sb-ink)}
+.mht em{font-style:italic;color:var(--sb-ink2)}
 </style>
 </head>
 <body>
-
-<!-- MOBILE HEADER -->
-<div class="mobile-header" id="mobile-header">
-  <div class="mh-title">Signal <em>Search</em></div>
-  <div class="mh-right" id="mh-period">Manutan FR · Avr. 2026</div>
-</div>
-
-<div class="shell">
-
-  <!-- SIDEBAR (desktop) -->
-  <aside class="sidebar">
-    <div class="sb-top">
-      <div class="sb-eyebrow"><span class="sb-dot"></span>Manutan Group</div>
-      <div class="sb-title">Signal<br><em>Search</em></div>
-      <div class="sb-stats">
-        <div class="sb-stat">
-          <span class="sb-stat-n" id="sb-vol">—</span>
-          <span class="sb-stat-l">recherches</span>
-        </div>
-        <div class="sb-stat">
-          <span class="sb-stat-n" id="sb-fam">—</span>
-          <span class="sb-stat-l">univers</span>
-        </div>
-        <div class="sb-stat">
-          <span class="sb-stat-n" id="sb-nr">—</span>
-          <span class="sb-stat-l">non couverts</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="sb-nav">
-      <div class="sb-nav-label">Navigation</div>
-      <button class="sb-nav-item active" id="snav-univers" onclick="setView('univers')">
-        <span class="sb-nav-icon">◈</span> Univers
-        <span class="sb-nav-count" id="snav-univers-count">—</span>
-      </button>
-      <button class="sb-nav-item" id="snav-alertes" onclick="setView('alertes')">
-        <span class="sb-nav-icon">⚑</span> Trous d'offre
-        <span class="sb-nav-count" id="snav-alertes-count">—</span>
-      </button>
-      <button class="sb-nav-item" id="snav-tendances" onclick="setView('tendances')">
-        <span class="sb-nav-icon">↑</span> Tendances
-        <span class="sb-nav-count" id="snav-tendances-count">—</span>
-      </button>
-    </div>
-
-    <div class="sb-period">
-      <div class="sb-period-label">Période</div>
-      <div class="sb-period-val">Avril 2026 · FR</div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <div class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar" id="topbar">
-      <div class="tb-breadcrumb" id="breadcrumb">
-        <span class="tb-bc-current">Univers</span>
-      </div>
-      <div class="tb-spacer"></div>
-      <div class="tb-tabs" id="tb-tabs" style="display:none">
-        <button class="tb-tab active" onclick="setView('univers')">Univers</button>
-        <button class="tb-tab" onclick="setView('alertes')">Alertes</button>
-        <button class="tb-tab" onclick="setView('tendances')">Tendances</button>
-      </div>
-    </div>
-
-    <div class="page">
-
-      <!-- VIEW: UNIVERS -->
-      <div class="tab-view active" id="view-univers">
-
-        <!-- Families list -->
-        <div id="panel-families">
-          <div class="page-header">
-            <div class="ph-title">Vos univers</div>
-            <div class="ph-sub" id="fam-sub">—</div>
-          </div>
-          <div class="fam-grid" id="fam-grid"></div>
-        </div>
-
-        <!-- Subfamilies list -->
-        <div id="panel-subfamilies" style="display:none">
-          <div class="section-hero" id="fam-hero"></div>
-          <div class="sf-list" id="sf-list"></div>
-        </div>
-
-        <!-- Detail -->
-        <div id="panel-detail" style="display:none">
-          <div class="section-hero" id="sf-hero-block"></div>
-          <div class="detail-layout">
-            <div id="demand-left"></div>
-            <div>
-              <div class="signals-card" id="signals-card">
-                <div class="sc-header"><div class="sc-label">Signaux catman</div></div>
-                <div class="sig-loading" id="sig-loading">
-                  <div class="sig-ld-dot"></div><div class="sig-ld-dot"></div><div class="sig-ld-dot"></div>
-                  <span style="font-size:12px;color:rgba(250,249,245,.3)">Analyse en cours…</span>
-                </div>
-                <div id="signals-content"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- VIEW: ALERTES -->
-      <div class="tab-view" id="view-alertes">
-        <div class="page-header">
-          <div class="ph-title">Trous d'offre</div>
-          <div class="ph-sub" id="alert-sub">—</div>
-        </div>
-        <div class="list-grid" id="alert-grid"></div>
-      </div>
-
-      <!-- VIEW: TENDANCES -->
-      <div class="tab-view" id="view-tendances">
-        <div class="page-header">
-          <div class="ph-title">Signaux de croissance</div>
-          <div class="ph-sub" id="trend-sub">—</div>
-        </div>
-        <div class="list-grid" id="trend-grid"></div>
-      </div>
-
-    </div>
+<div class="mhdr">
+  <div class="mht">Signal <em>Search</em></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--sb-ink3)">Avr. 2026 · FR</div>
+    <button onclick="toggleTheme()" style="background:none;border:none;color:var(--sb-ink3);cursor:pointer;font-size:14px">&#9681;</button>
   </div>
 </div>
-
-<!-- MOBILE NAV -->
-<nav class="mobile-nav" id="mobile-nav">
-  <button class="mn-item active" id="mn-univers" onclick="setView('univers')"><span class="mn-icon">◈</span><span class="mn-label">Univers</span></button>
-  <button class="mn-item" id="mn-alertes" onclick="setView('alertes')"><span class="mn-icon">⚑</span><span class="mn-label">Alertes</span></button>
-  <button class="mn-item" id="mn-tendances" onclick="setView('tendances')"><span class="mn-icon">↑</span><span class="mn-label">Tendances</span></button>
-</nav>
-
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-pilot"><span class="sb-pdot"></span>Pilote eMerch &middot; Manutan Group</div>
+      <div class="sb-title"><span>Signal</span><br><em>Search</em></div>
+      <div class="sb-period">Avril 2026 &middot; France</div>
+    </div>
+    <div class="sb-stats">
+      <div class="sb-stat"><span class="sb-sn" id="sb-vol">&mdash;</span><span class="sb-sl">recherches</span></div>
+      <div class="sb-stat"><span class="sb-sn">8</span><span class="sb-sl">univers</span></div>
+      <div class="sb-stat"><span class="sb-sn" id="sb-nr">&mdash;</span><span class="sb-sl">no result</span></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-ns">Univers</div>
+      <div id="sb-nav"></div>
+    </div>
+    <div class="sb-bot">
+      <button class="tbtn" onclick="toggleTheme()">
+        <span id="th-icon">&#9681;</span><span id="th-label">Mode sombre</span>
+      </button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><div id="bc" style="display:flex;align-items:center;gap:0"></div></div>
+    <div class="page" id="pg"></div>
+  </div>
+</div>
 <script>
-const DATA = {"Hygiène & nettoyage":{"icon":"🧹","v":9942,"d":0.5117,"subfams":{"Poubelles & collecte déchets":{"v":4735,"d":0.4981,"terms":[{"t":"poubelle","v":1057,"d":0.5317,"cr":0.088,"pct":0.4335},{"t":"cendrier","v":410,"d":0.5293,"cr":0.0805,"pct":0.0819},{"t":"benne","v":157,"d":0.4968,"cr":0.0064,"pct":-0.836},{"t":"sac","v":138,"d":0.5652,"cr":0.1087,"pct":0.6304},{"t":"sac poubelle","v":133,"d":0.3835,"cr":0.1278,"pct":0.0187},{"t":"poubelle tri","v":90,"d":0.5667,"cr":0.0556,"pct":1.7778},{"t":"poubelle de tri","v":88,"d":0.5,"cr":0.0455,"pct":0.1364},{"t":"corbeille","v":82,"d":0.622,"cr":0.0244,"pct":-0.628}],"nr":[{"t":"distributeur de portions multi rack","v":5},{"t":"corbeille escapade","v":4},{"t":"poubelle dib","v":4}],"trend":{"t":"poubelle inox","pct":8.33}},"Balais & nettoyage sol":{"v":1521,"d":0.4767,"terms":[{"t":"balai","v":343,"d":0.5044,"cr":0.105,"pct":0.4727},{"t":"pelle","v":260,"d":0.4615,"cr":0.1,"pct":-0.1355},{"t":"raclette","v":183,"d":0.4973,"cr":0.0929,"pct":-0.1033},{"t":"balais","v":121,"d":0.4545,"cr":0.124,"pct":0.3186},{"t":"balai coco","v":37,"d":0.3243,"cr":0.2162,"pct":0.5351}],"nr":[{"t":"frange 41cm avec croche","v":4},{"t":"balai brosse large","v":3}],"trend":{"t":"manche balai","pct":5.86}},"Aspirateurs & machines":{"v":1013,"d":0.5708,"terms":[{"t":"aspirateur","v":329,"d":0.5441,"cr":0.0638,"pct":0.2051},{"t":"karcher","v":137,"d":0.7007,"cr":0.0365,"pct":-0.4421},{"t":"autolaveuse","v":33,"d":0.6667,"cr":0.0606,"pct":1.1212},{"t":"nettoyeur haute pression","v":40,"d":0.675,"cr":0.0,"pct":-1.0}],"nr":[{"t":"aspirateur amiante","v":4},{"t":"aspirateur main libre","v":4}],"trend":{"t":"autolaveuse","pct":1.12}},"Hygiène des mains":{"v":438,"d":0.5114,"terms":[{"t":"savon","v":70,"d":0.6,"cr":0.1,"pct":-0.2818},{"t":"papier toilette","v":48,"d":0.5833,"cr":0.2917,"pct":0.2444},{"t":"distributeur savon","v":33,"d":0.5152,"cr":0.0909,"pct":1.0}],"nr":[{"t":"savon sec","v":3}],"trend":{"t":"essuie mains","pct":2.6}},"Tenues hygiène jetables":{"v":441,"d":0.5277,"terms":[{"t":"blouse","v":80,"d":0.525,"cr":0.0625,"pct":0.0089},{"t":"tablier","v":76,"d":0.5263,"cr":0.0658,"pct":0.2368},{"t":"charlotte","v":69,"d":0.6232,"cr":0.1739,"pct":0.2016},{"t":"manchette","v":40,"d":0.4,"cr":0.05,"pct":-0.5875},{"t":"combinaison jetable","v":19,"d":0.5263,"cr":0.1053,"pct":1.5263}],"nr":[{"t":"blouse blanche cintree","v":4}],"trend":{"t":"combinaison jetable","pct":1.53}}},"nr_total":37},"Entrepôt & manutention":{"icon":"📦","v":12264,"d":0.5141,"subfams":{"Chariots & transpalettes":{"v":2311,"d":0.549,"terms":[{"t":"transpalette","v":285,"d":0.5193,"cr":0.0807,"pct":0.64},{"t":"diable","v":273,"d":0.5275,"cr":0.0769,"pct":0.2308},{"t":"palette","v":179,"d":0.4581,"cr":0.1006,"pct":1.1821},{"t":"chariot inox","v":138,"d":0.5725,"cr":0.058,"pct":2.8261},{"t":"gerbeur","v":129,"d":0.4729,"cr":0.0543,"pct":0.2548}],"nr":[{"t":"chariot de ménage","v":5},{"t":"diable palettiseur fûts","v":5}],"trend":{"t":"transpa","pct":3.36}},"Rayonnage & stockage":{"v":4199,"d":0.5019,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"rayonnage","v":367,"d":0.4932,"cr":0.049,"pct":-0.1385},{"t":"etagere","v":365,"d":0.6959,"cr":0.0493,"pct":0.0932},{"t":"rack","v":242,"d":0.5207,"cr":0.0207,"pct":-0.5259}],"nr":[{"t":"armoire archives anti feu","v":7},{"t":"étagère chambre froide","v":4}],"trend":{"t":"bac rangement","pct":0.53}},"Échelles & plateformes":{"v":1240,"d":0.5226,"terms":[{"t":"marche pied","v":369,"d":0.5257,"cr":0.0596,"pct":0.093},{"t":"escabeau","v":321,"d":0.5452,"cr":0.0717,"pct":0.2053},{"t":"plateforme","v":127,"d":0.4961,"cr":0.0394,"pct":0.6339}],"nr":[{"t":"escabeau girafe","v":6}],"trend":{"t":"plateforme","pct":0.63}},"Sangles & levage":{"v":1199,"d":0.5075,"terms":[{"t":"sangle","v":304,"d":0.5559,"cr":0.0526,"pct":0.038},{"t":"crochet","v":198,"d":0.6263,"cr":0.0657,"pct":-0.0852},{"t":"palan","v":188,"d":0.5319,"cr":0.016,"pct":0.5957},{"t":"elingue","v":115,"d":0.4609,"cr":0.0435,"pct":-0.0621}],"nr":[{"t":"sangle d assurage","v":3}],"trend":{"t":"palan","pct":0.60}},"Vestiaires & casiers":{"v":1047,"d":0.4499,"terms":[{"t":"vestiaire","v":400,"d":0.44,"cr":0.0475,"pct":-0.0764},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"vestiaire multicases","v":19,"d":0.4737,"cr":0.2105,"pct":4.6842}],"nr":[{"t":"vestiaire lili","v":3}],"trend":{"t":"vestiaire multicases","pct":4.68}}},"nr_total":50},"Sécurité & EPI":{"icon":"🦺","v":6411,"d":0.553,"subfams":{"Gants de protection":{"v":829,"d":0.5153,"terms":[{"t":"gants","v":251,"d":0.5219,"cr":0.1394,"pct":0.4071},{"t":"gant","v":234,"d":0.453,"cr":0.1239,"pct":-0.1944},{"t":"gants nitrile","v":39,"d":0.4103,"cr":0.1282,"pct":-0.0028},{"t":"gant anti coupure","v":27,"d":0.5926,"cr":0.2222,"pct":0.7172}],"nr":[{"t":"gant mécanique jetable","v":4},{"t":"gant honeywell","v":3}],"trend":{"t":"gants jetables","pct":2.0}},"Masques & respiratoires":{"v":372,"d":0.5349,"terms":[{"t":"masque","v":108,"d":0.5,"cr":0.1019,"pct":1.2238},{"t":"masque ffp3","v":73,"d":0.6438,"cr":0.0548,"pct":-0.5303},{"t":"demi masque","v":42,"d":0.5,"cr":0.3571,"pct":4.1786}],"nr":[{"t":"masque amiante","v":3},{"t":"demi masque ventilé","v":3}],"trend":{"t":"demi masque","pct":4.18}},"Signalisation":{"v":1705,"d":0.6114,"terms":[{"t":"panneau","v":239,"d":0.5816,"cr":0.0628,"pct":0.205},{"t":"cone","v":159,"d":0.5409,"cr":0.0566,"pct":-0.2075},{"t":"pictogramme","v":92,"d":0.5978,"cr":0.0217,"pct":-0.6304}],"nr":[{"t":"balise lumineuse","v":4}],"trend":{"t":"signalisation","pct":1.02}},"Bac de rétention":{"v":780,"d":0.4522,"terms":[{"t":"bac de rétention","v":389,"d":0.491,"cr":0.0488,"pct":0.0101},{"t":"absorbant","v":139,"d":0.4892,"cr":0.1511,"pct":0.3597},{"t":"kit absorbant","v":25,"d":0.4,"cr":0.12,"pct":1.16}],"nr":[{"t":"kit anti pollution hydrocarbure","v":6}],"trend":{"t":"kit absorbant","pct":1.16}},"Chaussures de sécurité":{"v":645,"d":0.5997,"terms":[{"t":"chaussure","v":233,"d":0.618,"cr":0.0644,"pct":-0.2167},{"t":"chaussures","v":103,"d":0.6214,"cr":0.068,"pct":-0.1165},{"t":"embout","v":33,"d":0.4848,"cr":0.1212,"pct":0.0303}],"nr":[],"trend":null},"Premiers secours":{"v":451,"d":0.5584,"terms":[{"t":"rince oeil","v":145,"d":0.5724,"cr":0.1172,"pct":0.0112},{"t":"extincteur","v":79,"d":0.6456,"cr":0.038,"pct":-0.3418},{"t":"trousse","v":45,"d":0.4444,"cr":0.0889,"pct":0.8667}],"nr":[{"t":"armoire à pharmacie avec code","v":4}],"trend":{"t":"trousse","pct":0.87}}},"nr_total":41},"Bureau & mobilier":{"icon":"🪑","v":10036,"d":0.5296,"subfams":{"Sièges & fauteuils":{"v":2724,"d":0.549,"terms":[{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"tabouret","v":285,"d":0.5474,"cr":0.0456,"pct":0.1018},{"t":"fauteuil","v":277,"d":0.5921,"cr":0.0361,"pct":-0.4144},{"t":"chaise pliante","v":69,"d":0.5942,"cr":0.1014,"pct":0.7923}],"nr":[{"t":"chaise pvc empilable dana","v":3}],"trend":{"t":"assis debout","pct":6.62}},"Bureaux & tables":{"v":2841,"d":0.5219,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"table pliante","v":149,"d":0.5503,"cr":0.0738,"pct":-0.0119},{"t":"table haute","v":130,"d":0.5308,"cr":0.0385,"pct":0.6346},{"t":"table pique nique","v":80,"d":0.5875,"cr":0.1125,"pct":0.7438}],"nr":[{"t":"perche pour laver table","v":12},{"t":"bureau open space","v":9}],"trend":{"t":"tableau affichage","pct":3.31}},"Affichage & tableau":{"v":1261,"d":0.4714,"terms":[{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"paper board","v":20,"d":0.3,"cr":0.15,"pct":1.625}],"nr":[],"trend":{"t":"paper board","pct":1.63}},"Informatique":{"v":1031,"d":0.5701,"terms":[{"t":"souris","v":148,"d":0.6351,"cr":0.1284,"pct":1.6674},{"t":"multiprise","v":156,"d":0.4872,"cr":0.0833,"pct":-0.192},{"t":"support écran","v":44,"d":0.5,"cr":0.0909,"pct":3.8182}],"nr":[{"t":"souris filaires","v":3}],"trend":{"t":"support écran","pct":3.82}},"Rangement bureau":{"v":1298,"d":0.5118,"terms":[{"t":"meuble","v":189,"d":0.6243,"cr":0.037,"pct":0.1111},{"t":"caisson","v":159,"d":0.566,"cr":0.0314,"pct":-0.5549},{"t":"armoire basse","v":105,"d":0.4381,"cr":0.0762,"pct":0.7333}],"nr":[{"t":"armoires archives anti feu","v":7}],"trend":{"t":"armoires","pct":4.87}}},"nr_total":35},"Emballage":{"icon":"📫","v":7239,"d":0.5125,"subfams":{"Bacs & contenants":{"v":2746,"d":0.4981,"terms":[{"t":"bac de retention","v":303,"d":0.4917,"cr":0.0594,"pct":-0.1416},{"t":"bac a bec","v":265,"d":0.4491,"cr":0.0491,"pct":-0.2584},{"t":"bidon","v":163,"d":0.4601,"cr":0.0552,"pct":-0.3699},{"t":"bac de rangement","v":144,"d":0.5486,"cr":0.0694,"pct":1.5231}],"nr":[{"t":"housse chauffante cuve 1000l","v":5}],"trend":{"t":"bac bleu","pct":2.44}},"Adhésifs & scotch":{"v":1064,"d":0.4751,"terms":[{"t":"scotch","v":304,"d":0.4605,"cr":0.125,"pct":-0.0144},{"t":"dymo","v":233,"d":0.4979,"cr":0.0858,"pct":-0.3512},{"t":"étiquette","v":56,"d":0.625,"cr":0.0536,"pct":1.1964}],"nr":[{"t":"scotch velcro","v":5},{"t":"scotch amiante","v":3}],"trend":{"t":"étiquette","pct":1.20}},"Couteaux & outils":{"v":1259,"d":0.5538,"terms":[{"t":"cutter","v":329,"d":0.5532,"cr":0.1155,"pct":-0.0196},{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"pince coupante","v":119,"d":0.479,"cr":0.1176,"pct":1.1618}],"nr":[{"t":"pinces de fixation relexim","v":4}],"trend":{"t":"lame cutter","pct":5.10}},"Boîtes & caisses carton":{"v":1656,"d":0.5227,"terms":[{"t":"boite de rangement","v":169,"d":0.4734,"cr":0.0533,"pct":-0.1721},{"t":"boite à clé","v":141,"d":0.5035,"cr":0.0709,"pct":-0.3901},{"t":"caisse plastique","v":123,"d":0.3902,"cr":0.0569,"pct":0.1509}],"nr":[{"t":"boite à bec kangarou","v":5}],"trend":{"t":"boite a clef","pct":6.71}}},"nr_total":35},"Outillage":{"icon":"🔧","v":4575,"d":0.5158,"subfams":{"Outillage à main":{"v":1772,"d":0.5151,"terms":[{"t":"tournevis","v":124,"d":0.5161,"cr":0.0726,"pct":0.25},{"t":"facom","v":121,"d":0.6364,"cr":0.0248,"pct":-0.5077},{"t":"ciseaux","v":88,"d":0.3977,"cr":0.0909,"pct":0.6777},{"t":"marteau","v":78,"d":0.359,"cr":0.0513,"pct":-0.1282}],"nr":[{"t":"marteau facom","v":3}],"trend":{"t":"stanley","pct":2.5}},"Outillage électroportatif":{"v":462,"d":0.5688,"terms":[{"t":"visseuse","v":95,"d":0.5684,"cr":0.0316,"pct":-0.6463},{"t":"meuleuse","v":54,"d":0.4815,"cr":0.037,"pct":1.9259},{"t":"dewalt","v":42,"d":0.7143,"cr":0.119,"pct":3.2857}],"nr":[{"t":"perceuse visseuse moteur sans charbon","v":5}],"trend":{"t":"dewalt","pct":3.29}},"Rangement outils":{"v":798,"d":0.5291,"terms":[{"t":"servante","v":366,"d":0.5437,"cr":0.0383,"pct":1.0528},{"t":"coffre","v":160,"d":0.6312,"cr":0.0312,"pct":-0.3073},{"t":"mallette","v":43,"d":0.3953,"cr":0.0465,"pct":0.5349}],"nr":[],"trend":{"t":"servante","pct":1.05}}},"nr_total":28},"Espace extérieur":{"icon":"🌿","v":2178,"d":0.5354,"subfams":{"Abris & stockage":{"v":328,"d":0.6221,"terms":[{"t":"abri","v":107,"d":0.6075,"cr":0.0374,"pct":0.2461},{"t":"abri fumeur","v":56,"d":0.5536,"cr":0.0536,"pct":3.0714},{"t":"abri velo","v":34,"d":0.6471,"cr":0.0,"pct":-1.0}],"nr":[{"t":"abri pour vélos maternelle","v":3}],"trend":{"t":"abri fumeur","pct":3.07}},"Signalisation routière":{"v":1283,"d":0.4799,"terms":[{"t":"miroir","v":400,"d":0.4875,"cr":0.055,"pct":-0.0169},{"t":"poteau","v":235,"d":0.4936,"cr":0.0426,"pct":-0.5511},{"t":"barrière","v":156,"d":0.5,"cr":0.0256,"pct":-0.2222}],"nr":[{"t":"protection poteau hydrant","v":3}],"trend":{"t":"poteaux","pct":0.38}}},"nr_total":5},"Restauration":{"icon":"☕","v":739,"d":0.5522,"subfams":{"Équipements cuisine":{"v":609,"d":0.5824,"terms":[{"t":"micro onde","v":139,"d":0.518,"cr":0.1295,"pct":0.282},{"t":"frigo","v":124,"d":0.6452,"cr":0.0565,"pct":0.1667},{"t":"café","v":87,"d":0.6437,"cr":0.1264,"pct":5.069},{"t":"bouilloire","v":38,"d":0.6053,"cr":0.1579,"pct":0.3263}],"nr":[{"t":"cadenas pour frigo","v":3}],"trend":{"t":"café","pct":5.07}}},"nr_total":5}};
+const D = {"Entrepôt & manutention":{"icon":"📦","v":16828,"d":0.4844,"nr_total":34,"top_terms":["chariot","armoire","bac","vestiaire","marche pied"],"subfams":{"Chariots & transpalettes":{"v":4086,"d":0.5166,"terms":[{"t":"chariot","v":1534,"d":0.5717,"cr":0.0424,"pct":-0.0542},{"t":"transpalette","v":285,"d":0.5193,"cr":0.0807,"pct":0.64},{"t":"diable","v":273,"d":0.5275,"cr":0.0769,"pct":0.2308},{"t":"palette","v":179,"d":0.4581,"cr":0.1006,"pct":1.1821},{"t":"roll","v":166,"d":0.4458,"cr":0.0663,"pct":0.1747},{"t":"chariot inox","v":138,"d":0.5725,"cr":0.058,"pct":2.8261},{"t":"gerbeur","v":129,"d":0.4729,"cr":0.0543,"pct":0.2548},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"plateau roulant","v":80,"d":0.4875,"cr":0.0875,"pct":1.1875},{"t":"plateau","v":80,"d":0.4875,"cr":0.0375,"pct":-0.0438},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238}],"nr":[{"t":"chariot","v":6},{"t":"foray glide f stylo roller","v":5},{"t":"chariot de ménage","v":5},{"t":"diable palettiseur fûts","v":5},{"t":"chariot rabatable a029935","v":4},{"t":"a","v":4}]},"Rayonnage & stockage":{"v":5531,"d":0.521,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"rayonnage","v":367,"d":0.4932,"cr":0.049,"pct":-0.1385},{"t":"etagere","v":365,"d":0.6959,"cr":0.0493,"pct":0.0932},{"t":"rack","v":242,"d":0.5207,"cr":0.0207,"pct":-0.5259},{"t":"étagère","v":234,"d":0.6624,"cr":0.0385,"pct":0.1267},{"t":"boite de rangement","v":169,"d":0.4734,"cr":0.0533,"pct":-0.1721},{"t":"rangement","v":156,"d":0.6154,"cr":0.0321,"pct":-0.2588},{"t":"bac de rangement","v":144,"d":0.5486,"cr":0.0694,"pct":1.5231},{"t":"armoir","v":129,"d":0.5891,"cr":0.0078,"pct":-0.7926},{"t":"armoire basse","v":105,"d":0.4381,"cr":0.0762,"pct":0.7333},{"t":"casier","v":96,"d":0.4167,"cr":0.0208,"pct":-0.5116}],"nr":[{"t":"armoires archives anti feu","v":7},{"t":"armoire","v":6},{"t":"casier casque moto","v":5},{"t":"distributeur de portions multi rack","v":5},{"t":"évier de laboratoire avec rangement","v":4},{"t":"armoire  pour  couverture  coupe feux","v":4}]},"Sangles & levage":{"v":1504,"d":0.5047,"terms":[{"t":"sangle","v":304,"d":0.5559,"cr":0.0526,"pct":0.038},{"t":"crochet","v":198,"d":0.6263,"cr":0.0657,"pct":-0.0852},{"t":"palan","v":188,"d":0.5319,"cr":0.016,"pct":0.5957},{"t":"elingue","v":115,"d":0.4609,"cr":0.0435,"pct":-0.0621},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"treuil","v":76,"d":0.5395,"cr":0.0132,"pct":-0.6711},{"t":"levage","v":61,"d":0.4754,"cr":0.0328,"pct":0},{"t":"sangles","v":59,"d":0.4746,"cr":0.0508,"pct":-0.1102},{"t":"crochet mural","v":51,"d":0.5686,"cr":0.0784,"pct":0.2549},{"t":"élingue","v":46,"d":0.4783,"cr":0.0435,"pct":0.087},{"t":"anneau de levage","v":46,"d":0.4348,"cr":0.0,"pct":-1.0},{"t":"elingues","v":34,"d":0.5588,"cr":0.0588,"pct":0}],"nr":[{"t":"powertex sangle","v":5},{"t":"a","v":4},{"t":"tablier avec sangle sur epaule","v":4},{"t":"taquet de protection sangles","v":4},{"t":"crochet torchon mural","v":3},{"t":"double crochet à coller","v":3}]},"Échelles & plateformes":{"v":1551,"d":0.4855,"terms":[{"t":"marche pied","v":369,"d":0.5257,"cr":0.0596,"pct":0.093},{"t":"escabeau","v":321,"d":0.5452,"cr":0.0717,"pct":0.2053},{"t":"plateforme","v":127,"d":0.4961,"cr":0.0394,"pct":0.6339},{"t":"marche","v":111,"d":0.5315,"cr":0.0541,"pct":-0.2924},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"marchepied","v":74,"d":0.3243,"cr":0.0541,"pct":-0.1486},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"esca","v":52,"d":0.4808,"cr":0.0769,"pct":0.0462},{"t":"pied","v":49,"d":0.6122,"cr":0.0,"pct":0},{"t":"marche pieds","v":48,"d":0.4583,"cr":0.0625,"pct":0.4479},{"t":"échelle","v":41,"d":0.5854,"cr":0.0244,"pct":0.1463},{"t":"esc","v":29,"d":0.6552,"cr":0.069,"pct":0}],"nr":[{"t":"escabeau girafe","v":6},{"t":"a","v":4},{"t":"sabots escabeaux jumbo","v":3}]},"Vestiaires & casiers":{"v":1242,"d":0.4176,"terms":[{"t":"vestiaire","v":400,"d":0.44,"cr":0.0475,"pct":-0.0764},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"casier","v":96,"d":0.4167,"cr":0.0208,"pct":-0.5116},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"vestiaires","v":83,"d":0.3976,"cr":0.0241,"pct":-0.5863},{"t":"banc vestiaire","v":65,"d":0.4462,"cr":0.0462,"pct":0.167},{"t":"casier vestiaire","v":51,"d":0.5098,"cr":0.0392,"pct":0.549},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"armoire vestiaire","v":25,"d":0.56,"cr":0.08,"pct":1.16},{"t":"casiers vestiaires","v":25,"d":0.52,"cr":0.0,"pct":0},{"t":"vesti","v":24,"d":0.3333,"cr":0.0,"pct":-1.0},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0}],"nr":[{"t":"a","v":4},{"t":"vestiaire lili","v":3},{"t":"banc vestiaire lili","v":3}]},"Palettes & emballage entrepôt":{"v":1650,"d":0.4505,"terms":[{"t":"caisse","v":295,"d":0.4678,"cr":0.0542,"pct":-0.0308},{"t":"transpalette","v":285,"d":0.5193,"cr":0.0807,"pct":0.64},{"t":"palette","v":179,"d":0.4581,"cr":0.1006,"pct":1.1821},{"t":"caisse palette","v":164,"d":0.5183,"cr":0.0366,"pct":-0.3024},{"t":"film","v":107,"d":0.3925,"cr":0.1869,"pct":0.5888},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"cerclage","v":70,"d":0.4571,"cr":0.1,"pct":1.7333},{"t":"feuillard","v":62,"d":0.4516,"cr":0.0645,"pct":-0.4355},{"t":"palette plastique","v":59,"d":0.3729,"cr":0.0847,"pct":0.3277},{"t":"transpalette peseur","v":45,"d":0.6444,"cr":0.0222,"pct":-0.4222},{"t":"caisse-palette","v":35,"d":0.6857,"cr":0.0286,"pct":0},{"t":"film étirable","v":33,"d":0.4242,"cr":0.3333,"pct":1.1282}],"nr":[{"t":"a","v":4},{"t":"agraphe cerclage","v":4},{"t":"palette fut coucher","v":3}]},"Roulettes & roues":{"v":564,"d":0.5309,"terms":[{"t":"roulette","v":212,"d":0.5613,"cr":0.0472,"pct":-0.1604},{"t":"roue","v":162,"d":0.5926,"cr":0.0123,"pct":-0.4969},{"t":"brouette","v":42,"d":0.5952,"cr":0.0476,"pct":-0.5714},{"t":"roulettes","v":34,"d":0.5294,"cr":0.0,"pct":0},{"t":"bac à roulette","v":24,"d":0.5833,"cr":0.0,"pct":0},{"t":"diable 3 roues","v":24,"d":0.5417,"cr":0.0,"pct":-1.0},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"chariot roulette","v":20,"d":0.45,"cr":0.1,"pct":0.3}],"nr":[{"t":"suport a roulette port boite platique de rengement","v":5},{"t":"tableau conference sur roulettes","v":5},{"t":"suport a roulette port boite de rengement","v":4},{"t":"tablea avec roulette et plateau inclinable","v":3},{"t":"clé démonte roue","v":3},{"t":"tablea avec roulette et plateau inclinabl","v":3}]},"Convoyeurs":{"v":700,"d":0.442,"terms":[{"t":"tapis","v":341,"d":0.4897,"cr":0.0469,"pct":-0.2903},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"rouleau","v":70,"d":0.3857,"cr":0.0714,"pct":0.0357},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"convoyeur","v":59,"d":0.5424,"cr":0.0339,"pct":0.5932},{"t":"manutention","v":29,"d":0.5517,"cr":0.0,"pct":-1.0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"a","v":4}]}}},"Bureau & mobilier":{"icon":"🪑","v":22299,"d":0.5109,"nr_total":40,"top_terms":["armoire","table","tableau","chaise","bureau"],"subfams":{"Sièges & fauteuils":{"v":3002,"d":0.5564,"terms":[{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"bureau","v":539,"d":0.5993,"cr":0.0445,"pct":0.0604},{"t":"tabouret","v":285,"d":0.5474,"cr":0.0456,"pct":0.1018},{"t":"fauteuil","v":277,"d":0.5921,"cr":0.0361,"pct":-0.4144},{"t":"chaise de bureau","v":181,"d":0.4475,"cr":0.0663,"pct":-0.2518},{"t":"chaises","v":103,"d":0.6311,"cr":0.0388,"pct":-0.6583},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"chaise haute","v":82,"d":0.5488,"cr":0.0732,"pct":-0.3049},{"t":"chaise pliante","v":69,"d":0.5942,"cr":0.1014,"pct":0.7923},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"chaise bureau","v":61,"d":0.6066,"cr":0.082,"pct":0.7213},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238}],"nr":[{"t":"le19226a fauteuil","v":4},{"t":"a","v":4},{"t":"chaise bureauassise renforcee lombaire","v":3},{"t":"chaise pvc empilable dana","v":3},{"t":"chaise plastique pliante","v":3},{"t":"fauteuil armand non feu","v":3}]},"Bureaux & tables":{"v":4975,"d":0.5242,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"bureau","v":539,"d":0.5993,"cr":0.0445,"pct":0.0604},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"chaise de bureau","v":181,"d":0.4475,"cr":0.0663,"pct":-0.2518},{"t":"table pliante","v":149,"d":0.5503,"cr":0.0738,"pct":-0.0119},{"t":"table inox","v":134,"d":0.5672,"cr":0.0597,"pct":0.0149},{"t":"table elevatrice","v":133,"d":0.5338,"cr":0.0301,"pct":-0.0301},{"t":"table haute","v":130,"d":0.5308,"cr":0.0385,"pct":0.6346},{"t":"table élévatrice","v":109,"d":0.5413,"cr":0.0092,"pct":-0.8604},{"t":"table ronde","v":104,"d":0.5865,"cr":0.0481,"pct":-0.1526},{"t":"table basse","v":100,"d":0.51,"cr":0.06,"pct":0.065}],"nr":[{"t":"perche pour laver table","v":12},{"t":"bureau open space","v":9},{"t":"tableau conference sur roulettes","v":5},{"t":"chariot rabatable a029935","v":4},{"t":"a","v":4},{"t":"table pliante 666982","v":4}]},"Rangement bureau":{"v":2758,"d":0.5021,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"meuble","v":189,"d":0.6243,"cr":0.037,"pct":0.1111},{"t":"caisson","v":159,"d":0.566,"cr":0.0314,"pct":-0.5549},{"t":"rangement","v":156,"d":0.6154,"cr":0.0321,"pct":-0.2588},{"t":"armoir","v":129,"d":0.5891,"cr":0.0078,"pct":-0.7926},{"t":"armoire basse","v":105,"d":0.4381,"cr":0.0762,"pct":0.7333},{"t":"classeur","v":96,"d":0.4583,"cr":0.0521,"pct":-0.0253},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"armoire de rangement","v":48,"d":0.5208,"cr":0.0,"pct":0},{"t":"armoire produit chimique","v":39,"d":0.5641,"cr":0.0,"pct":-1.0},{"t":"armoire inox","v":39,"d":0.4872,"cr":0.0,"pct":0},{"t":"armoire atelier","v":39,"d":0.4359,"cr":0.0513,"pct":0.5897}],"nr":[{"t":"armoires archives anti feu","v":7},{"t":"armoire","v":6},{"t":"armoire  pour  couverture  coupe feux","v":4},{"t":"a","v":4},{"t":"armoire à pharmacie avec code","v":4},{"t":"armoires  anti feu pour archives","v":4}]},"Affichage & tableau":{"v":2889,"d":0.4603,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"panneau","v":239,"d":0.5816,"cr":0.0628,"pct":0.205},{"t":"vitrine","v":163,"d":0.5276,"cr":0.0368,"pct":-0.2965},{"t":"affichage","v":84,"d":0.5714,"cr":0.0952,"pct":-0.2619},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"panneau affichage","v":72,"d":0.5833,"cr":0.0556,"pct":0.463},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"anneau","v":59,"d":0.4237,"cr":0.0339,"pct":-0.1299},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"panneau d'affichage","v":49,"d":0.551,"cr":0.1224,"pct":0.2245}],"nr":[{"t":"tableau conference sur roulettes","v":5},{"t":"clef passe pour vitrine","v":4},{"t":"a","v":4},{"t":"table","v":4},{"t":"clef tableau nono w23","v":3},{"t":"blocage volet tableau","v":3}]},"Papeterie":{"v":688,"d":0.4764,"terms":[{"t":"stylo","v":91,"d":0.6264,"cr":0.1209,"pct":-0.2011},{"t":"cahier","v":86,"d":0.5,"cr":0.1163,"pct":0.1163},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"pied de biche","v":51,"d":0.3922,"cr":0.098,"pct":0.2255},{"t":"velo","v":50,"d":0.72,"cr":0.02,"pct":-0.704},{"t":"stylo bic","v":44,"d":0.7727,"cr":0.0227,"pct":-0.7591},{"t":"ray","v":38,"d":0.3684,"cr":0.0263,"pct":-0.6491},{"t":"cahier a5","v":34,"d":0.4412,"cr":0.2059,"pct":-0.2108},{"t":"bloc note","v":28,"d":0.5714,"cr":0.2143,"pct":0.5714},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"enveloppe","v":25,"d":0.32,"cr":0.36,"pct":1.592},{"t":"crayon","v":24,"d":0.5833,"cr":0.1667,"pct":0.0417}],"nr":[{"t":"foray glide f stylo roller","v":5},{"t":"a","v":4},{"t":"a736816 crayon charpentier mondelin","v":3},{"t":"support crayon aimante","v":3}]},"Informatique":{"v":1590,"d":0.516,"terms":[{"t":"tapis","v":341,"d":0.4897,"cr":0.0469,"pct":-0.2903},{"t":"multiprise","v":156,"d":0.4872,"cr":0.0833,"pct":-0.192},{"t":"support","v":151,"d":0.5232,"cr":0.053,"pct":0.0967},{"t":"souris","v":148,"d":0.6351,"cr":0.1284,"pct":1.6674},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"clavier","v":72,"d":0.5833,"cr":0.0833,"pct":0.2639},{"t":"tapis de souris","v":61,"d":0.4918,"cr":0.1311,"pct":1.0609},{"t":"souris sans fil","v":53,"d":0.6415,"cr":0.0755,"pct":0.1429},{"t":"imprimante","v":51,"d":0.6863,"cr":0.098,"pct":0.0022},{"t":"support écran","v":44,"d":0.5,"cr":0.0909,"pct":3.8182},{"t":"tapis souris","v":38,"d":0.3684,"cr":0.1316,"pct":-0.4737},{"t":"souris ergonomique","v":32,"d":0.5625,"cr":0.125,"pct":-0.0078}],"nr":[{"t":"a","v":4},{"t":"souris sans fil ergonomique blanche","v":3},{"t":"souris filaires","v":3},{"t":"multiprises grande longueur","v":3},{"t":"souris tip-ex","v":3}]},"Cloisons & acoustique":{"v":1091,"d":0.5021,"terms":[{"t":"bureau","v":539,"d":0.5993,"cr":0.0445,"pct":0.0604},{"t":"cloison","v":144,"d":0.5625,"cr":0.0208,"pct":1.7708},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"paravent","v":68,"d":0.5588,"cr":0.0294,"pct":-0.1667},{"t":"bure","v":37,"d":0.7297,"cr":0.0,"pct":0},{"t":"bur","v":29,"d":0.7586,"cr":0.0345,"pct":0},{"t":"burea","v":28,"d":0.5357,"cr":0.0,"pct":-1.0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727},{"t":"para","v":21,"d":0.381,"cr":0.0476,"pct":0}],"nr":[{"t":"a","v":4}]},"Tables de restauration":{"v":5306,"d":0.5179,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"tableau","v":558,"d":0.4373,"cr":0.0842,"pct":0.6439},{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"tableau blanc","v":429,"d":0.4615,"cr":0.0932,"pct":0.3766},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"chaise de bureau","v":181,"d":0.4475,"cr":0.0663,"pct":-0.2518},{"t":"table pliante","v":149,"d":0.5503,"cr":0.0738,"pct":-0.0119},{"t":"table inox","v":134,"d":0.5672,"cr":0.0597,"pct":0.0149},{"t":"table elevatrice","v":133,"d":0.5338,"cr":0.0301,"pct":-0.0301},{"t":"table haute","v":130,"d":0.5308,"cr":0.0385,"pct":0.6346},{"t":"table élévatrice","v":109,"d":0.5413,"cr":0.0092,"pct":-0.8604},{"t":"table ronde","v":104,"d":0.5865,"cr":0.0481,"pct":-0.1526}],"nr":[{"t":"perche pour laver table","v":12},{"t":"tableau conference sur roulettes","v":5},{"t":"chariot rabatable a029935","v":4},{"t":"a","v":4},{"t":"table pliante 666982","v":4},{"t":"gant mécanique jetable","v":4}]}}},"Hygiène & nettoyage":{"icon":"🧹","v":11571,"d":0.4942,"nr_total":29,"top_terms":["chariot","poubelle","table","cendrier","balai"],"subfams":{"Poubelles & collecte déchets":{"v":4399,"d":0.4823,"terms":[{"t":"poubelle","v":1057,"d":0.5317,"cr":0.088,"pct":0.4335},{"t":"cendrier","v":410,"d":0.5293,"cr":0.0805,"pct":0.0819},{"t":"vitrine","v":163,"d":0.5276,"cr":0.0368,"pct":-0.2965},{"t":"benne","v":157,"d":0.4968,"cr":0.0064,"pct":-0.836},{"t":"sac","v":138,"d":0.5652,"cr":0.1087,"pct":0.6304},{"t":"table elevatrice","v":133,"d":0.5338,"cr":0.0301,"pct":-0.0301},{"t":"sac poubelle","v":133,"d":0.3835,"cr":0.1278,"pct":0.0187},{"t":"table élévatrice","v":109,"d":0.5413,"cr":0.0092,"pct":-0.8604},{"t":"trieur","v":95,"d":0.4842,"cr":0.0526,"pct":-0.0947},{"t":"poubelle tri","v":90,"d":0.5667,"cr":0.0556,"pct":1.7778},{"t":"poubelle de tri","v":88,"d":0.5,"cr":0.0455,"pct":0.1364},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048}],"nr":[{"t":"scotch electricien","v":7},{"t":"distributeur de portions multi rack","v":5},{"t":"friteuse électrique en triphasée","v":5},{"t":"tringle rideau","v":4},{"t":"clef passe pour vitrine","v":4},{"t":"corbeille escapade","v":4}]},"Balais & nettoyage sol":{"v":1581,"d":0.4362,"terms":[{"t":"balai","v":343,"d":0.5044,"cr":0.105,"pct":0.4727},{"t":"pelle","v":260,"d":0.4615,"cr":0.1,"pct":-0.1355},{"t":"raclette","v":183,"d":0.4973,"cr":0.0929,"pct":-0.1033},{"t":"balais","v":121,"d":0.4545,"cr":0.124,"pct":0.3186},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"support balai","v":73,"d":0.5616,"cr":0.0137,"pct":-0.7479},{"t":"manche","v":43,"d":0.3256,"cr":0.093,"pct":0.2093},{"t":"cle","v":40,"d":0.55,"cr":0.075,"pct":0},{"t":"balai coco","v":37,"d":0.3243,"cr":0.2162,"pct":0.5351},{"t":"raclette sol","v":33,"d":0.4848,"cr":0.0606,"pct":-0.4015},{"t":"balai brosse","v":30,"d":0.5667,"cr":0.1333,"pct":-0.3212},{"t":"aspirateur balai","v":29,"d":0.4828,"cr":0.0345,"pct":-0.5862}],"nr":[{"t":"a","v":4},{"t":"frange 41cm avec croche","v":4},{"t":"balai brosse large","v":3},{"t":"balais de charbon pour makita 9565cr","v":3},{"t":"recharge balai vigor","v":3}]},"Aspirateurs & machines":{"v":1190,"d":0.5234,"terms":[{"t":"aspirateur","v":329,"d":0.5441,"cr":0.0638,"pct":0.2051},{"t":"karcher","v":137,"d":0.7007,"cr":0.0365,"pct":-0.4421},{"t":"brosse","v":98,"d":0.4796,"cr":0.1122,"pct":0.5887},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"nettoyeur","v":47,"d":0.7234,"cr":0.0213,"pct":-0.5745},{"t":"nettoyeur haute pression","v":40,"d":0.675,"cr":0.0,"pct":-1.0},{"t":"aspirateur sans fil","v":40,"d":0.575,"cr":0.025,"pct":0},{"t":"pir","v":35,"d":0.4857,"cr":0.0,"pct":-1.0},{"t":"autolaveuse","v":33,"d":0.6667,"cr":0.0606,"pct":1.1212},{"t":"aspi","v":33,"d":0.5758,"cr":0.0,"pct":-1.0},{"t":"aspirateur karcher","v":30,"d":0.5,"cr":0.0667,"pct":-0.48},{"t":"aspirateur atex","v":30,"d":0.4667,"cr":0.0,"pct":0}],"nr":[{"t":"a","v":4},{"t":"aspirateur amiante","v":4},{"t":"aspirateur main libre","v":4},{"t":"karcher hd 7/18c","v":3},{"t":"aspirateur professionnel sans fil, grande capacité, tous liquides","v":3},{"t":"nettoyeur haute pression hds-e 8/16-4m 24kw","v":3}]},"Hygiène des mains":{"v":577,"d":0.4753,"terms":[{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"distributeur","v":79,"d":0.5949,"cr":0.0633,"pct":0.0398},{"t":"papier","v":74,"d":0.6081,"cr":0.1351,"pct":0.583},{"t":"savon","v":70,"d":0.6,"cr":0.1,"pct":-0.2818},{"t":"papier toilette","v":48,"d":0.5833,"cr":0.2917,"pct":0.2444},{"t":"essui","v":40,"d":0.525,"cr":0.125,"pct":0.4375},{"t":"distributeur savon","v":33,"d":0.5152,"cr":0.0909,"pct":1.0},{"t":"gel hydro","v":32,"d":0.4062,"cr":0.0938,"pct":0.125},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"savon main","v":23,"d":0.4348,"cr":0.2174,"pct":0.2174},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0}],"nr":[{"t":"a","v":4},{"t":"savon sec","v":3}]},"Nettoyants & produits":{"v":340,"d":0.4857,"terms":[{"t":"lingette","v":91,"d":0.5055,"cr":0.1209,"pct":0.1809},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"lingettes","v":73,"d":0.589,"cr":0.0822,"pct":-0.2329},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"nettoyant","v":22,"d":0.7273,"cr":0.0909,"pct":0.0606},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"lingette lunette ecologique lavable","v":5},{"t":"a","v":4},{"t":"distribuiter des lingettes nettoyantes fixé","v":3}]},"Tenues hygiène jetables":{"v":1674,"d":0.5008,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"chaussure","v":233,"d":0.618,"cr":0.0644,"pct":-0.2167},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"blouse","v":80,"d":0.525,"cr":0.0625,"pct":0.0089},{"t":"tablier","v":76,"d":0.5263,"cr":0.0658,"pct":0.2368},{"t":"charlotte","v":69,"d":0.6232,"cr":0.1739,"pct":0.2016},{"t":"chauss","v":65,"d":0.6,"cr":0.0462,"pct":-0.0154},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"chau","v":54,"d":0.6852,"cr":0.0185,"pct":0.0556},{"t":"eta","v":49,"d":0.5918,"cr":0.0408,"pct":0},{"t":"char","v":45,"d":0.4444,"cr":0.1556,"pct":1.1259},{"t":"manche","v":43,"d":0.3256,"cr":0.093,"pct":0.2093}],"nr":[{"t":"tablier","v":5},{"t":"a","v":4},{"t":"table","v":4},{"t":"blouse  blanche cintree","v":4},{"t":"tablier avec sangle sur epaule","v":4}]},"Chariots de ménage":{"v":1810,"d":0.4855,"terms":[{"t":"chariot","v":1534,"d":0.5717,"cr":0.0424,"pct":-0.0542},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"char","v":45,"d":0.4444,"cr":0.1556,"pct":1.1259},{"t":"chario","v":43,"d":0.5349,"cr":0.0233,"pct":-0.4651},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0}],"nr":[{"t":"chariot","v":6},{"t":"a","v":4}]}}},"Sécurité & EPI":{"icon":"🦺","v":9932,"d":0.4958,"nr_total":45,"top_terms":["armoire","bac","bac de rétention","gants","panneau"],"subfams":{"Gants de protection":{"v":1052,"d":0.5017,"terms":[{"t":"gants","v":251,"d":0.5219,"cr":0.1394,"pct":0.4071},{"t":"gant","v":234,"d":0.453,"cr":0.1239,"pct":-0.1944},{"t":"protection","v":125,"d":0.472,"cr":0.064,"pct":0.9712},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"atex","v":42,"d":0.7619,"cr":0.0238,"pct":-0.0238},{"t":"gants nitrile","v":39,"d":0.4103,"cr":0.1282,"pct":-0.0028},{"t":"gants anti","v":31,"d":0.6129,"cr":0.0,"pct":-1.0},{"t":"gant anti coupure","v":27,"d":0.5926,"cr":0.2222,"pct":0.7172},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"gant nitrile","v":25,"d":0.28,"cr":0.12,"pct":0.2},{"t":"gants anti coupure","v":24,"d":0.6667,"cr":0.0,"pct":-1.0}],"nr":[{"t":"a","v":4},{"t":"gants  nitrile","v":4},{"t":"gant mécanique jetable","v":4},{"t":"autocollant port des gants","v":4},{"t":"pince porte gant","v":4},{"t":"-\tgants électricien isolants latex classe 1 – 1000-7500v – hta","v":3}]},"Protection tête & yeux":{"v":1027,"d":0.4991,"terms":[{"t":"casque","v":190,"d":0.4895,"cr":0.1316,"pct":0.1075},{"t":"protection","v":125,"d":0.472,"cr":0.064,"pct":0.9712},{"t":"vis","v":84,"d":0.6548,"cr":0.1071,"pct":7.6786},{"t":"lunette","v":84,"d":0.4881,"cr":0.2262,"pct":2.2044},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"bouchon","v":80,"d":0.5625,"cr":0.125,"pct":0.0556},{"t":"casquette","v":61,"d":0.5738,"cr":0.082,"pct":0.2295},{"t":"lunettes","v":52,"d":0.4038,"cr":0.1346,"pct":-0.0409},{"t":"casque anti bruit","v":36,"d":0.5,"cr":0.0556,"pct":-0.6444},{"t":"casque anti","v":31,"d":0.5161,"cr":0.0323,"pct":-0.7097},{"t":"casque audio","v":30,"d":0.6667,"cr":0.1333,"pct":4.0667},{"t":"casque de chantier","v":27,"d":0.5926,"cr":0.037,"pct":-0.1111}],"nr":[{"t":"casier casque moto","v":5},{"t":"a","v":4},{"t":"casque de chantier","v":4},{"t":"casier à casque","v":3},{"t":"casque","v":3},{"t":"rangement casque moto","v":3}]},"Chaussures de sécurité":{"v":1223,"d":0.5409,"terms":[{"t":"chaussure","v":233,"d":0.618,"cr":0.0644,"pct":-0.2167},{"t":"chaussures","v":103,"d":0.6214,"cr":0.068,"pct":-0.1165},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"chaussure de sécurité","v":72,"d":0.625,"cr":0.0417,"pct":-0.3542},{"t":"chauss","v":65,"d":0.6,"cr":0.0462,"pct":-0.0154},{"t":"chaussures de sécurité","v":65,"d":0.5692,"cr":0.0615,"pct":0.6217},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"chau","v":54,"d":0.6852,"cr":0.0185,"pct":0.0556},{"t":"surchaussure","v":44,"d":0.5909,"cr":0.1136,"pct":0.0795},{"t":"bott","v":43,"d":0.5116,"cr":0.0233,"pct":-0.4264},{"t":"chaussu","v":38,"d":0.6053,"cr":0.0,"pct":0},{"t":"chaussure de securite","v":36,"d":0.5833,"cr":0.1111,"pct":2.3333}],"nr":[{"t":"botte nordik 3833","v":5},{"t":"a","v":4},{"t":"bottes de sécurité chimie - modèle sa","v":4},{"t":"grattoir à chaussure","v":4},{"t":"casier à chaussures","v":4},{"t":"chaussure haute a rabat pour fondeur","v":4}]},"Vêtements de travail":{"v":653,"d":0.5081,"terms":[{"t":"gilet","v":123,"d":0.4797,"cr":0.0813,"pct":-0.3767},{"t":"vis","v":84,"d":0.6548,"cr":0.1071,"pct":7.6786},{"t":"pantalon","v":84,"d":0.6071,"cr":0.0595,"pct":0.7262},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"lit","v":63,"d":0.9524,"cr":0.0,"pct":-1.0},{"t":"gilet jaune","v":40,"d":0.425,"cr":0.075,"pct":-0.25},{"t":"combinaison","v":30,"d":0.4667,"cr":0.0667,"pct":0.9},{"t":"veste","v":29,"d":0.5172,"cr":0.1379,"pct":5.069},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"gilet haute visibilité","v":22,"d":0.5909,"cr":0.0909,"pct":-0.0545}],"nr":[{"t":"gilet serre file","v":5},{"t":"a","v":4}]},"Masques & respiratoires":{"v":464,"d":0.4593,"terms":[{"t":"masque","v":108,"d":0.5,"cr":0.1019,"pct":1.2238},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"masque ffp3","v":73,"d":0.6438,"cr":0.0548,"pct":-0.5303},{"t":"ffp3","v":70,"d":0.7143,"cr":0.0286,"pct":-0.5571},{"t":"demi masque","v":42,"d":0.5,"cr":0.3571,"pct":4.1786},{"t":"pir","v":35,"d":0.4857,"cr":0.0,"pct":-1.0},{"t":"masque ffp2","v":30,"d":0.2667,"cr":0.1,"pct":0.1},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"lunette masque volans","v":5},{"t":"a","v":4},{"t":"masque sommeil","v":3},{"t":"masque amiante","v":3},{"t":"demi masque 7503","v":3},{"t":"demi masque ventilé","v":3}]},"Harnais & antichute":{"v":375,"d":0.4089,"terms":[{"t":"harnais","v":94,"d":0.5745,"cr":0.0426,"pct":-0.5887},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"rallonge","v":73,"d":0.3973,"cr":0.1644,"pct":0.4921},{"t":"longe","v":47,"d":0.4894,"cr":0.0213,"pct":-0.8005},{"t":"rallonge electrique","v":29,"d":0.4138,"cr":0.1379,"pct":-0.3103},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"a","v":4},{"t":"harnais système ras","v":3}]},"Signalisation":{"v":1670,"d":0.587,"terms":[{"t":"panneau","v":239,"d":0.5816,"cr":0.0628,"pct":0.205},{"t":"rubalise","v":168,"d":0.4048,"cr":0.1429,"pct":0.0173},{"t":"cone","v":159,"d":0.5409,"cr":0.0566,"pct":-0.2075},{"t":"balisage","v":99,"d":0.5354,"cr":0.0707,"pct":-0.1957},{"t":"pictogramme","v":92,"d":0.5978,"cr":0.0217,"pct":-0.6304},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"panneau affichage","v":72,"d":0.5833,"cr":0.0556,"pct":0.463},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"anneau","v":59,"d":0.4237,"cr":0.0339,"pct":-0.1299},{"t":"panneau d'affichage","v":49,"d":0.551,"cr":0.1224,"pct":0.2245},{"t":"panneau stop","v":49,"d":0.551,"cr":0.0204,"pct":-0.6327},{"t":"balise","v":46,"d":0.5652,"cr":0.0217,"pct":-0.8424}],"nr":[{"t":"a","v":4},{"t":"balise lumineuse","v":4},{"t":"cone","v":4},{"t":"poteau signalisation leste","v":4},{"t":"panneau toquer avant d entrer","v":3},{"t":"panneau se garer en marche arrière","v":3}]},"Premiers secours":{"v":1717,"d":0.5333,"terms":[{"t":"armoire","v":973,"d":0.5057,"cr":0.0462,"pct":0.0971},{"t":"rince oeil","v":145,"d":0.5724,"cr":0.1172,"pct":0.0112},{"t":"armoir","v":129,"d":0.5891,"cr":0.0078,"pct":-0.7926},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"extincteur","v":79,"d":0.6456,"cr":0.038,"pct":-0.3418},{"t":"douche","v":51,"d":0.5686,"cr":0.0588,"pct":-0.3333},{"t":"trousse","v":45,"d":0.4444,"cr":0.0889,"pct":0.8667},{"t":"armoire pharmacie","v":36,"d":0.5278,"cr":0.0278,"pct":-0.8056},{"t":"pharmacie","v":32,"d":0.5,"cr":0.1875,"pct":0.3125},{"t":"armoi","v":26,"d":0.5385,"cr":0.1154,"pct":-0.0769},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"panneau extincteur","v":25,"d":0.88,"cr":0.0,"pct":0}],"nr":[{"t":"armoire","v":6},{"t":"a","v":4},{"t":"armoire à pharmacie avec code","v":4},{"t":"trousse à pharmacie","v":4},{"t":"extincteur véhicule","v":3},{"t":"trousse","v":3}]},"Bac de rétention":{"v":1751,"d":0.4158,"terms":[{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"bac de rétention","v":389,"d":0.491,"cr":0.0488,"pct":0.0101},{"t":"absorbant","v":139,"d":0.4892,"cr":0.1511,"pct":0.3597},{"t":"rétention","v":130,"d":0.4231,"cr":0.0231,"pct":-0.599},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"bac de","v":77,"d":0.4416,"cr":0.0649,"pct":0.7532},{"t":"bac rétention","v":62,"d":0.4839,"cr":0.0323,"pct":-0.4516},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"kit absorbant","v":25,"d":0.4,"cr":0.12,"pct":1.16},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"palette de rétention","v":23,"d":0.3913,"cr":0.2609,"pct":3.6957},{"t":"kit","v":21,"d":0.4762,"cr":0.0952,"pct":-0.3333}],"nr":[{"t":"a","v":4},{"t":"bac","v":3},{"t":"bac de rétention 340 litres","v":3},{"t":"nappe absorbante","v":3},{"t":"collerette absorbante","v":3}]}}},"Emballage":{"icon":"📫","v":10423,"d":0.4686,"nr_total":28,"top_terms":["bac","bac de rétention","cutter","scotch","bac de retention"],"subfams":{"Bacs & contenants":{"v":3983,"d":0.4922,"terms":[{"t":"bac","v":751,"d":0.482,"cr":0.0546,"pct":-0.0388},{"t":"bac de rétention","v":389,"d":0.491,"cr":0.0488,"pct":0.0101},{"t":"bac de retention","v":303,"d":0.4917,"cr":0.0594,"pct":-0.1416},{"t":"bac a bec","v":265,"d":0.4491,"cr":0.0491,"pct":-0.2584},{"t":"bidon","v":163,"d":0.4601,"cr":0.0552,"pct":-0.3699},{"t":"bac plastique","v":163,"d":0.4601,"cr":0.0613,"pct":0.3701},{"t":"rangement","v":156,"d":0.6154,"cr":0.0321,"pct":-0.2588},{"t":"bac de rangement","v":144,"d":0.5486,"cr":0.0694,"pct":1.5231},{"t":"bac à bec","v":140,"d":0.5214,"cr":0.0643,"pct":-0.0391},{"t":"bache","v":115,"d":0.5478,"cr":0.1217,"pct":1.9014},{"t":"bac retention","v":100,"d":0.48,"cr":0.05,"pct":-0.5},{"t":"cuve","v":90,"d":0.6222,"cr":0.0111,"pct":-0.6926}],"nr":[{"t":"housse chauffante cuve 1000l","v":5},{"t":"diable palettiseur fûts","v":5},{"t":"a","v":4},{"t":"pompe siphon manuelle pour bidon 5l et 20l","v":3},{"t":"bac de retention 100ol","v":3},{"t":"bac","v":3}]},"Adhésifs & scotch":{"v":1394,"d":0.4592,"terms":[{"t":"scotch","v":304,"d":0.4605,"cr":0.125,"pct":-0.0144},{"t":"dymo","v":233,"d":0.4979,"cr":0.0858,"pct":-0.3512},{"t":"ruban","v":127,"d":0.4016,"cr":0.063,"pct":-0.4436},{"t":"scotch double face","v":98,"d":0.4694,"cr":0.0816,"pct":-0.5394},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"colle","v":80,"d":0.45,"cr":0.1,"pct":0.1714},{"t":"porte étiquette","v":58,"d":0.5345,"cr":0.069,"pct":0},{"t":"scotcheuse","v":58,"d":0.3621,"cr":0.069,"pct":-0.4414},{"t":"étiquette","v":56,"d":0.625,"cr":0.0536,"pct":1.1964},{"t":"ruban adhésif","v":47,"d":0.5319,"cr":0.0426,"pct":-0.6746},{"t":"pistolet","v":44,"d":0.3636,"cr":0.0682,"pct":0},{"t":"ruban dymo","v":36,"d":0.5556,"cr":0.1389,"pct":-0.3519}],"nr":[{"t":"scotch electricien","v":7},{"t":"scotch velcro","v":5},{"t":"a","v":4},{"t":"ruban adhésif double face","v":4},{"t":"ruban adhésif aluminium toilé","v":3},{"t":"scotch amiante","v":3}]},"Couteaux & outils":{"v":1410,"d":0.5117,"terms":[{"t":"cutter","v":329,"d":0.5532,"cr":0.1155,"pct":-0.0196},{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"pinceau","v":167,"d":0.5988,"cr":0.0958,"pct":0.216},{"t":"pince coupante","v":119,"d":0.479,"cr":0.1176,"pct":1.1618},{"t":"dévidoir","v":100,"d":0.51,"cr":0.07,"pct":-0.285},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"couteau","v":77,"d":0.5455,"cr":0.0519,"pct":-0.2121},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"lame cutter","v":31,"d":0.5484,"cr":0.2258,"pct":5.0968},{"t":"pince multiprise","v":31,"d":0.4194,"cr":0.1613,"pct":0.2317},{"t":"pince monseigneur","v":26,"d":0.6538,"cr":0.0385,"pct":-0.7308},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615}],"nr":[{"t":"a","v":4},{"t":"pinces de fixation relexim","v":4},{"t":"pince à becs brussel","v":4},{"t":"pince porte gant","v":4},{"t":"pince coupe plomb","v":3},{"t":"pince a souflet","v":3}]},"Films & protections":{"v":667,"d":0.4372,"terms":[{"t":"mousse","v":116,"d":0.5517,"cr":0.0259,"pct":-0.3978},{"t":"film","v":107,"d":0.3925,"cr":0.1869,"pct":0.5888},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"papier","v":74,"d":0.6081,"cr":0.1351,"pct":0.583},{"t":"mousse de protection","v":53,"d":0.4528,"cr":0.0943,"pct":3.5283},{"t":"mousse protection","v":43,"d":0.4651,"cr":0.1395,"pct":1.1395},{"t":"protection mousse","v":40,"d":0.475,"cr":0.0,"pct":-1.0},{"t":"film étirable","v":33,"d":0.4242,"cr":0.3333,"pct":1.1282},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"papier kraft","v":24,"d":0.375,"cr":0.0833,"pct":0.9167},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"a","v":4},{"t":"mousseur robinet","v":3}]},"Boîtes & caisses":{"v":2592,"d":0.4986,"terms":[{"t":"caisse","v":295,"d":0.4678,"cr":0.0542,"pct":-0.0308},{"t":"boite","v":235,"d":0.5149,"cr":0.0468,"pct":-0.1138},{"t":"boite de rangement","v":169,"d":0.4734,"cr":0.0533,"pct":-0.1721},{"t":"caisse palette","v":164,"d":0.5183,"cr":0.0366,"pct":-0.3024},{"t":"rangement","v":156,"d":0.6154,"cr":0.0321,"pct":-0.2588},{"t":"boite à clé","v":141,"d":0.5035,"cr":0.0709,"pct":-0.3901},{"t":"caisse plastique","v":123,"d":0.3902,"cr":0.0569,"pct":0.1509},{"t":"carton","v":117,"d":0.5214,"cr":0.0427,"pct":-0.3974},{"t":"boite plastique","v":94,"d":0.4468,"cr":0.0532,"pct":-0.4415},{"t":"boite rangement","v":90,"d":0.4222,"cr":0.0556,"pct":0.0972},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"boite aux lettres","v":77,"d":0.5714,"cr":0.026,"pct":-0.2727}],"nr":[{"t":"suport a roulette port boite platique de rengement","v":5},{"t":"boite à bec kangarou","v":5},{"t":"suport a roulette port boite de rengement","v":4},{"t":"a","v":4},{"t":"caisse rangement plastique avec couvercle robuste, 100l","v":4},{"t":"boite de joint de fibre","v":4}]},"Machines emballage":{"v":377,"d":0.441,"terms":[{"t":"cercleuse","v":116,"d":0.6552,"cr":0.0431,"pct":0.1638},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"bande","v":51,"d":0.4706,"cr":0.0392,"pct":-0.6373},{"t":"cle","v":40,"d":0.55,"cr":0.075,"pct":0},{"t":"soudeuse","v":36,"d":0.5,"cr":0.0556,"pct":0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0}],"nr":[{"t":"cercleuse portative","v":4},{"t":"a","v":4}]}}},"Fournitures industrielles & outillage":{"icon":"🔧","v":7904,"d":0.4986,"nr_total":35,"top_terms":["servante","balance","pince","seau","pinceau"],"subfams":{"Outillage à main":{"v":2798,"d":0.5107,"terms":[{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"seau","v":193,"d":0.4093,"cr":0.1036,"pct":0.4269},{"t":"pinceau","v":167,"d":0.5988,"cr":0.0958,"pct":0.216},{"t":"boite à clé","v":141,"d":0.5035,"cr":0.0709,"pct":-0.3901},{"t":"tournevis","v":124,"d":0.5161,"cr":0.0726,"pct":0.25},{"t":"facom","v":121,"d":0.6364,"cr":0.0248,"pct":-0.5077},{"t":"pince coupante","v":119,"d":0.479,"cr":0.1176,"pct":1.1618},{"t":"ciseaux","v":88,"d":0.3977,"cr":0.0909,"pct":0.6777},{"t":"vis","v":84,"d":0.6548,"cr":0.1071,"pct":7.6786},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"serrage facom","v":82,"d":0.7927,"cr":0.0366,"pct":1.2683},{"t":"marteau","v":78,"d":0.359,"cr":0.0513,"pct":-0.1282}],"nr":[{"t":"a","v":4},{"t":"pinces de fixation relexim","v":4},{"t":"pince à becs brussel","v":4},{"t":"boîte à clés","v":4},{"t":"pince porte gant","v":4},{"t":"marteau facom","v":3}]},"Outillage électroportatif":{"v":612,"d":0.5253,"terms":[{"t":"visseuse","v":95,"d":0.5684,"cr":0.0316,"pct":-0.6463},{"t":"vis","v":84,"d":0.6548,"cr":0.1071,"pct":7.6786},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"makita","v":58,"d":0.7069,"cr":0.0,"pct":-1.0},{"t":"meuleuse","v":54,"d":0.4815,"cr":0.037,"pct":1.9259},{"t":"perceuse","v":53,"d":0.6038,"cr":0.0755,"pct":0.1698},{"t":"dewalt","v":42,"d":0.7143,"cr":0.119,"pct":3.2857},{"t":"bosch","v":27,"d":0.6667,"cr":0.0,"pct":-1.0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"ponceuse","v":22,"d":0.6364,"cr":0.0,"pct":-1.0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"perceuse visseuse moteur sans charbon","v":5},{"t":"ponceuse girafe","v":5},{"t":"a","v":4},{"t":"bosch gws 17-125 psb","v":4},{"t":"makita bl1450 batteries 14,4v li-ion - 5.0ah","v":3},{"t":"balais de charbon pour makita 9565cr","v":3}]},"Mesure & contrôle":{"v":726,"d":0.4798,"terms":[{"t":"balance","v":245,"d":0.5347,"cr":0.0408,"pct":0.2698},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"niveau","v":44,"d":0.3636,"cr":0.1591,"pct":0.4318},{"t":"thermo","v":43,"d":0.6512,"cr":0.093,"pct":0},{"t":"chronomètre","v":36,"d":0.5556,"cr":0.0556,"pct":0.5833},{"t":"thermomètre","v":35,"d":0.4571,"cr":0.1143,"pct":3.2286},{"t":"manomètre","v":28,"d":0.6786,"cr":0.0357,"pct":0},{"t":"chrono","v":26,"d":0.6154,"cr":0.0385,"pct":0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"bala","v":23,"d":0.4783,"cr":0.087,"pct":-0.4203}],"nr":[{"t":"a","v":4},{"t":"duromètre","v":4},{"t":"turbidimètre","v":3},{"t":"manomètre axial","v":3},{"t":"marmite alu diuamètre 47","v":3},{"t":"saturomètre","v":3}]},"Rangement outils":{"v":1019,"d":0.48,"terms":[{"t":"servante","v":366,"d":0.5437,"cr":0.0383,"pct":1.0528},{"t":"coffre","v":160,"d":0.6312,"cr":0.0312,"pct":-0.3073},{"t":"coffre fort","v":106,"d":0.5943,"cr":0.0189,"pct":-0.2217},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"coffret","v":56,"d":0.5536,"cr":0.0,"pct":-1.0},{"t":"malle","v":52,"d":0.5192,"cr":0.0192,"pct":0},{"t":"mallette","v":43,"d":0.3953,"cr":0.0465,"pct":0.5349},{"t":"servante facom","v":37,"d":0.4865,"cr":0.0541,"pct":0.5135},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"coffret douille","v":26,"d":0.4231,"cr":0.0385,"pct":0},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"coffret embout","v":21,"d":0.5238,"cr":0.0952,"pct":0}],"nr":[{"t":"a","v":4}]},"Compresseurs & pneumatique":{"v":535,"d":0.4824,"terms":[{"t":"compresseur","v":115,"d":0.5304,"cr":0.0609,"pct":2.6522},{"t":"tuyau","v":95,"d":0.5474,"cr":0.0526,"pct":0.3158},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"presse","v":45,"d":0.5556,"cr":0.0889,"pct":0.5704},{"t":"pistolet","v":44,"d":0.3636,"cr":0.0682,"pct":0},{"t":"support tuyau","v":30,"d":0.6667,"cr":0.0667,"pct":-0.5111},{"t":"tuyau arrosage","v":29,"d":0.5862,"cr":0.069,"pct":0.069},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"enrouleur tuyau","v":23,"d":0.4783,"cr":0.0435,"pct":0},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"a","v":4},{"t":"tuyau transfert acide","v":3},{"t":"tuyau dn80","v":3},{"t":"tuyaux  200mm","v":3},{"t":"tuyau annelé","v":3}]},"Peinture & traitement":{"v":1053,"d":0.4749,"terms":[{"t":"pince","v":218,"d":0.6055,"cr":0.0688,"pct":0.0714},{"t":"pinceau","v":167,"d":0.5988,"cr":0.0958,"pct":0.216},{"t":"peinture","v":104,"d":0.625,"cr":0.1538,"pct":1.5},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"peinture sol","v":74,"d":0.4054,"cr":0.0676,"pct":0.509},{"t":"rouleau","v":70,"d":0.3857,"cr":0.0714,"pct":0.0357},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"bâche","v":37,"d":0.6216,"cr":0.1081,"pct":1.1081},{"t":"rouleau peinture","v":37,"d":0.5676,"cr":0.2162,"pct":1.0},{"t":"bombe peinture","v":32,"d":0.4062,"cr":0.1562,"pct":-0.0938},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"marqueur peinture","v":24,"d":0.5417,"cr":0.0417,"pct":-0.5417}],"nr":[{"t":"a","v":4},{"t":"peinture special sol garage","v":3},{"t":"bombe de peinture proline","v":3}]},"Colle & fixation":{"v":904,"d":0.4974,"terms":[{"t":"tournevis","v":124,"d":0.5161,"cr":0.0726,"pct":0.25},{"t":"visseuse","v":95,"d":0.5684,"cr":0.0316,"pct":-0.6463},{"t":"vis","v":84,"d":0.6548,"cr":0.1071,"pct":7.6786},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"colle","v":80,"d":0.45,"cr":0.1,"pct":0.1714},{"t":"cheville","v":43,"d":0.5349,"cr":0.1163,"pct":0.7733},{"t":"tournevis plat","v":33,"d":0.4848,"cr":0.0303,"pct":0.3939},{"t":"tournevis facom","v":31,"d":0.5161,"cr":0.129,"pct":0},{"t":"visiere","v":30,"d":0.4333,"cr":0.0667,"pct":-0.35},{"t":"smit visual","v":27,"d":0.8148,"cr":0.0,"pct":0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"mastic","v":25,"d":0.8,"cr":0.0,"pct":-1.0}],"nr":[{"t":"perceuse visseuse moteur sans charbon","v":5},{"t":"a","v":4},{"t":"album de cartes de visite","v":3},{"t":"double crochet à coller","v":3},{"t":"colle double face","v":3},{"t":"cheville spit","v":3}]},"Graissage & lubrification":{"v":257,"d":0.454,"terms":[{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"graisse","v":47,"d":0.4255,"cr":0.0851,"pct":-0.3475},{"t":"pompe à graisse","v":29,"d":0.6552,"cr":0.0345,"pct":-0.2069},{"t":"huile","v":28,"d":0.6786,"cr":0.0,"pct":-1.0},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"pompe a graisse","v":23,"d":0.5217,"cr":0.0435,"pct":-0.6739},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"deshuileur pour air comprimer","v":4},{"t":"a","v":4}]}}},"Espace extérieur":{"icon":"🌿","v":4726,"d":0.4814,"nr_total":12,"top_terms":["table","chaise","miroir","banc","pelle"],"subfams":{"Signalisation routière":{"v":1462,"d":0.4596,"terms":[{"t":"miroir","v":400,"d":0.4875,"cr":0.055,"pct":-0.0169},{"t":"poteau","v":235,"d":0.4936,"cr":0.0426,"pct":-0.5511},{"t":"barrière","v":156,"d":0.5,"cr":0.0256,"pct":-0.2222},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"ralentisseur","v":60,"d":0.35,"cr":0.0,"pct":-1.0},{"t":"pot","v":45,"d":0.4667,"cr":0.0667,"pct":0.2222},{"t":"miroir de sécurité","v":42,"d":0.4048,"cr":0.0714,"pct":-0.0519},{"t":"poteaux","v":38,"d":0.5263,"cr":0.1316,"pct":0.3816},{"t":"barrière de protection","v":36,"d":0.4722,"cr":0.0556,"pct":-0.5714},{"t":"poteau de protection","v":35,"d":0.3429,"cr":0.0571,"pct":0},{"t":"miroi","v":30,"d":0.2,"cr":0.0333,"pct":-0.6}],"nr":[{"t":"a","v":4},{"t":"poteau signalisation leste","v":4},{"t":"protection poteau hydrant","v":3},{"t":"la borne wifi ; aruba access point: model h303","v":3}]},"Abris & stockage extérieur":{"v":812,"d":0.5248,"terms":[{"t":"parasol","v":217,"d":0.5253,"cr":0.0461,"pct":-0.2857},{"t":"abri","v":107,"d":0.6075,"cr":0.0374,"pct":0.2461},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"abri fumeur","v":56,"d":0.5536,"cr":0.0536,"pct":3.0714},{"t":"velo","v":50,"d":0.72,"cr":0.02,"pct":-0.704},{"t":"abris fumeur","v":47,"d":0.6596,"cr":0.0,"pct":-1.0},{"t":"vélo","v":44,"d":0.5909,"cr":0.0,"pct":-1.0},{"t":"abri velo","v":34,"d":0.6471,"cr":0.0,"pct":-1.0},{"t":"tonnelle","v":29,"d":0.7586,"cr":0.0,"pct":-1.0},{"t":"abri vélo","v":28,"d":0.5,"cr":0.0357,"pct":0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0}],"nr":[{"t":"a","v":4},{"t":"atlantique - abri vélos","v":3},{"t":"abri pour vélos de maternelle fermé","v":3}]},"Mobilier extérieur":{"v":1670,"d":0.4621,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238},{"t":"banc extérieur","v":28,"d":0.6071,"cr":0.0,"pct":-1.0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"tabl","v":20,"d":0.4,"cr":0.05,"pct":-0.3167}],"nr":[{"t":"a","v":4},{"t":"table","v":4}]},"Jardinage":{"v":385,"d":0.5152,"terms":[{"t":"tuyau","v":95,"d":0.5474,"cr":0.0526,"pct":0.3158},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"sable","v":41,"d":0.5854,"cr":0.0976,"pct":0.0},{"t":"jardin","v":38,"d":0.6579,"cr":0.0789,"pct":0},{"t":"tuyau arrosage","v":29,"d":0.5862,"cr":0.069,"pct":0.069},{"t":"tondeuse","v":27,"d":0.6667,"cr":0.0741,"pct":0.0741},{"t":"arrosage","v":24,"d":0.5833,"cr":0.0417,"pct":-0.0417},{"t":"b","v":24,"d":0.3333,"cr":0.0833,"pct":0},{"t":"bac a sable","v":23,"d":0.5217,"cr":0.0435,"pct":0}],"nr":[{"t":"a","v":4}]},"Déneigement":{"v":397,"d":0.4752,"terms":[{"t":"pelle","v":260,"d":0.4615,"cr":0.1,"pct":-0.1355},{"t":"lave vaisselle","v":50,"d":0.6,"cr":0.08,"pct":2.2},{"t":"liquide vaisselle","v":45,"d":0.5556,"cr":0.1333,"pct":-0.3949},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727},{"t":"sel","v":20,"d":0.35,"cr":0.05,"pct":-0.35}],"nr":[{"t":"pince à becs brussel","v":4},{"t":"self adhesive document sleeve","v":3}]}}},"Restauration":{"icon":"☕","v":4057,"d":0.5183,"nr_total":16,"top_terms":["table","chaise","banc","chaise de bureau","micro onde"],"subfams":{"Équipements cuisine":{"v":905,"d":0.5225,"terms":[{"t":"micro onde","v":139,"d":0.518,"cr":0.1295,"pct":0.282},{"t":"frigo","v":124,"d":0.6452,"cr":0.0565,"pct":0.1667},{"t":"café","v":87,"d":0.6437,"cr":0.1264,"pct":5.069},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"lave vaisselle","v":50,"d":0.6,"cr":0.08,"pct":2.2},{"t":"micro ondes","v":46,"d":0.4565,"cr":0.2174,"pct":1.1256},{"t":"réfrigérateur","v":41,"d":0.6829,"cr":0.0244,"pct":-0.5226},{"t":"micro","v":41,"d":0.4634,"cr":0.122,"pct":0.5549},{"t":"bouilloire","v":38,"d":0.6053,"cr":0.1579,"pct":0.3263},{"t":"machine à café","v":37,"d":0.6216,"cr":0.0,"pct":-1.0},{"t":"four","v":31,"d":0.6774,"cr":0.0,"pct":-1.0},{"t":"machine a café","v":27,"d":0.5926,"cr":0.0,"pct":-1.0}],"nr":[{"t":"a","v":4},{"t":"thermos café","v":3},{"t":"stahlwille fourche dynamo 13","v":3},{"t":"cadenas pour frigo","v":3}]},"Mobilier restauration":{"v":2524,"d":0.5126,"terms":[{"t":"table","v":564,"d":0.4982,"cr":0.0496,"pct":1.1623},{"t":"chaise","v":550,"d":0.5509,"cr":0.0727,"pct":0.5228},{"t":"banc","v":318,"d":0.5126,"cr":0.0409,"pct":-0.2402},{"t":"chaise de bureau","v":181,"d":0.4475,"cr":0.0663,"pct":-0.2518},{"t":"chaises","v":103,"d":0.6311,"cr":0.0388,"pct":-0.6583},{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"chaise haute","v":82,"d":0.5488,"cr":0.0732,"pct":-0.3049},{"t":"colle","v":80,"d":0.45,"cr":0.1,"pct":0.1714},{"t":"chaise pliante","v":69,"d":0.5942,"cr":0.1014,"pct":0.7923},{"t":"banc vestiaire","v":65,"d":0.4462,"cr":0.0462,"pct":0.167},{"t":"chaise bureau","v":61,"d":0.6066,"cr":0.082,"pct":0.7213},{"t":"cha","v":56,"d":0.6786,"cr":0.0357,"pct":-0.5238}],"nr":[{"t":"a","v":4},{"t":"table","v":4},{"t":"banc public","v":4},{"t":"chaise bureauassise renforcee lombaire","v":3},{"t":"banc vestiaire lili","v":3},{"t":"chaise pvc empilable dana","v":3}]},"Vaisselle & service":{"v":628,"d":0.4712,"terms":[{"t":"a","v":84,"d":0.1548,"cr":0.1548,"pct":1.1048},{"t":"plateau roulant","v":80,"d":0.4875,"cr":0.0875,"pct":1.1875},{"t":"plateau","v":80,"d":0.4875,"cr":0.0375,"pct":-0.0438},{"t":"eau","v":69,"d":0.5797,"cr":0.2029,"pct":0.7246},{"t":"lave vaisselle","v":50,"d":0.6,"cr":0.08,"pct":2.2},{"t":"liquide vaisselle","v":45,"d":0.5556,"cr":0.1333,"pct":-0.3949},{"t":"couverture","v":37,"d":0.4324,"cr":0.0811,"pct":-0.5459},{"t":"verre","v":26,"d":0.6154,"cr":0.0,"pct":-1.0},{"t":"c","v":26,"d":0.4231,"cr":0.0769,"pct":-0.4615},{"t":"assiette","v":24,"d":0.5417,"cr":0.0833,"pct":-0.125},{"t":"et","v":22,"d":0.5909,"cr":0.0455,"pct":0},{"t":"p","v":22,"d":0.4091,"cr":0.1818,"pct":2.2727}],"nr":[{"t":"armoire  pour  couverture  coupe feux","v":4},{"t":"a","v":4},{"t":"tablea avec roulette et plateau inclinable","v":3},{"t":"verre à pied gradué - 250ml","v":3},{"t":"tablea avec roulette et plateau inclinabl","v":3},{"t":"verres à pieds économiques","v":3}]}}}};
+function dc(d){return d<0.45?'ok':d<=0.5?'neutral':d<=0.6?'warn':'alert'}
+function bc(d){const c=dc(d);return c==='ok'?'bok':c==='neutral'?'bneutral':c==='warn'?'bwarn':'balert'}
+function chip(d,cls='dc'){return '<span class="'+cls+' '+dc(d)+'">'+(d*100).toFixed(1)+'%</span>'}
+function ev(pct){if(Math.abs(pct)<0.05)return '<span class="ef">—</span>';const s=pct>0?'+':'',c=pct>0?'eu':'ed';return '<span class="'+c+'">'+s+(pct*100).toFixed(0)+'%</span>'}
+function esc(s){return s.replace(/'/g,"\\'")}
+let S={lv:'home',fam:null,sf:null}
 
-// ── STATE ──────────────────────────────────────────────────────────────────────
-let S = { view:'univers', panel:'families', fam:null, sf:null, signals:{} };
-
-const dispCls = d => d>=0.6?'disp-alert':d>=0.48?'disp-warn':'disp-ok';
-const barCls = d => d>=0.6?'tbd-alert':d>=0.45?'tbd-warn':'tbd-ok';
-const pct = v => v==null?'—':`${v>0?'+':''}${(v*100).toFixed(0)}%`;
-const pctCls = v => v>0.05?'up':v<-0.05?'dn':'mu';
-
-function totalVol(){ return Object.values(DATA).reduce((s,f)=>s+f.v,0); }
-function totalNR(){ return Object.values(DATA).reduce((s,f)=>s+f.nr_total,0); }
-
-function init(){
-  const tv = totalVol(), tf = Object.keys(DATA).length, tn = totalNR();
-  document.getElementById('sb-vol').textContent = tv.toLocaleString('fr');
-  document.getElementById('sb-fam').textContent = tf;
-  document.getElementById('sb-nr').textContent = tn;
-  document.getElementById('snav-univers-count').textContent = tf;
-  renderFamilies();
-  renderAlerts();
-  renderTrends();
+function buildNav(){
+  const tv=Object.values(D).reduce((s,f)=>s+f.v,0)
+  const tn=Object.values(D).reduce((s,f)=>s+f.nr_total,0)
+  document.getElementById('sb-vol').textContent=tv.toLocaleString('fr')
+  document.getElementById('sb-nr').textContent=tn
+  document.getElementById('sb-nav').innerHTML=Object.entries(D).map(([fn,fd])=>{
+    return '<button class="sb-ni'+(S.fam===fn?' active':'')+'" onclick="gF(\''+esc(fn)+'\')">'
+      +'<span class="sb-icon">'+fd.icon+'</span>'
+      +'<span class="sb-nl">'+fn+'</span>'
+      +'<span class="sb-nd '+dc(fd.d)+'">'+(fd.d*100).toFixed(0)+'%</span>'
+      +'</button>'
+  }).join('')
 }
 
-// ── FAMILIES ──────────────────────────────────────────────────────────────────
-function renderFamilies(){
-  const fams = Object.entries(DATA).sort((a,b)=>b[1].v-a[1].v);
-  document.getElementById('fam-sub').textContent = `${fams.length} univers · ${totalVol().toLocaleString('fr')} recherches · Avril 2026 FR`;
-  document.getElementById('fam-grid').innerHTML = fams.map(([name,fd])=>{
-    const trends = Object.values(fd.subfams).filter(sf=>sf.trend).sort((a,b)=>b.trend.pct-a.trend.pct);
-    const topTrend = trends[0];
-    const fillW = Math.round(fd.d*100);
-    const bc = fd.d>=0.6?'#c03020':fd.d>=0.48?'#d4880a':'#60a830';
-    return `<div class="fam-card" onclick="openFamily('${name.replace(/'/g,"\\'")}')">
-      <div class="fc-top">
-        <div class="fc-icon">${fd.icon}</div>
-        <div class="fc-badges">
-          ${fd.nr_total>0?`<span class="fc-nr">⊘ ${fd.nr_total} non couverts</span>`:''}
-          ${topTrend?`<span class="fc-trend">↑ ${topTrend.trend.t}</span>`:''}
-        </div>
-      </div>
-      <div class="fc-name">${name}</div>
-      <div class="fc-meta">
-        <span>${fd.v.toLocaleString('fr')} rech.</span>
-        <span>·</span>
-        <span class="fc-disp ${dispCls(fd.d)}">${(fd.d*100).toFixed(1)}% disp.</span>
-        <span>·</span>
-        <span>${Object.keys(fd.subfams).length} sous-familles</span>
-      </div>
-      <div class="fc-bar"><div class="fc-bar-fill" style="width:${fillW}%;background:${bc}"></div></div>
-    </div>`;
-  }).join('');
+function bc_set(parts){
+  document.getElementById('bc').innerHTML=parts.map((p,i)=>{
+    const last=i===parts.length-1
+    if(last) return '<span class="bci cur">'+p.l+'</span>'
+    return '<button class="bci" onclick="'+p.a+'">'+p.l+'</button><span class="bcs">›</span>'
+  }).join('')
 }
 
-function openFamily(name){
-  S.fam = name; S.panel = 'subfamilies';
-  const fd = DATA[name];
-  setBreadcrumb([{label:'Univers',fn:'showPanel("families")'},name]);
-  document.getElementById('fam-hero').innerHTML = `
-    <div class="hero-label">${fd.icon} Univers</div>
-    <div class="hero-title">${name}</div>
-    <div class="hero-kpis">
-      <div class="hkpi"><div class="hkpi-n">${fd.v.toLocaleString('fr')}</div><div class="hkpi-l">Recherches</div></div>
-      <div class="hkpi accent"><div class="hkpi-n">${(fd.d*100).toFixed(1)}%</div><div class="hkpi-l">Dispersion moy.</div></div>
-      <div class="hkpi"><div class="hkpi-n">${fd.nr_total}</div><div class="hkpi-l">Non couverts</div></div>
-    </div>`;
-  document.getElementById('sf-list').innerHTML = Object.entries(fd.subfams).sort((a,b)=>b[1].v-a[1].v).map(([sfn,sf])=>{
-    const fillH = Math.round(sf.d*100);
-    const bc = sf.d>=0.6?'#c03020':sf.d>=0.48?'#d4880a':'#60a830';
-    return `<div class="sf-card" onclick="openDetail('${name.replace(/'/g,"\\'")}','${sfn.replace(/'/g,"\\'")}')">
-      <div class="sf-bar-v"><div class="sf-bar-fill-v" style="height:${fillH}%;background:${bc}"></div></div>
-      <div class="sf-body">
-        <div class="sf-name">${sfn}</div>
-        <div class="sf-meta">
-          <span>${sf.v.toLocaleString('fr')} rech.</span>
-          <span class="${dispCls(sf.d)}">${(sf.d*100).toFixed(1)}% disp.</span>
-        </div>
-      </div>
-      <div class="sf-right">
-        ${sf.trend?`<span class="sf-trend-badge">↑ ${pct(sf.trend.pct)}</span>`:''}
-        ${sf.nr.length>0?`<span class="sf-nr-badge">⊘ ${sf.nr.length}</span>`:''}
-        <span class="sf-arrow">›</span>
-      </div>
-    </div>`;
-  }).join('');
-  showPanel('subfamilies');
+function home(){
+  S={lv:'home',fam:null,sf:null}
+  buildNav()
+  bc_set([{l:'Accueil'}])
+  const html=Object.entries(D).map(([fn,fd])=>{
+    return '<div class="fc" onclick="gF(\''+esc(fn)+'\')">'
+      +'<div class="fc-top"><div class="fc-icon">'+fd.icon+'</div>'
+      +(fd.nr_total>0?'<span class="fc-nr">⊘ '+fd.nr_total+' no result</span>':'')+'</div>'
+      +'<div class="fc-name">'+fn+'</div>'
+      +'<div class="fc-row"><span class="fc-vol">'+fd.v.toLocaleString('fr')+' rech.</span>'+chip(fd.d)+'</div>'
+      +'<div class="fc-kw">'+fd.top_terms.join(' · ')+'</div>'
+      +'<div class="fc-bar"><div class="fc-barf '+bc(fd.d)+'" style="width:'+Math.round(fd.d*100)+'%"></div></div>'
+      +'</div>'
+  }).join('')
+  document.getElementById('pg').innerHTML='<div class="ph"><div class="ptitle" style="font-size:24px;margin-bottom:3px">Univers produit</div><div style="font-size:11px;font-family:\'DM Mono\',monospace;color:var(--ink3)">8 familles · Avril 2026 · FR</div></div><div class="fg">'+html+'</div>'
 }
 
-function openDetail(famName, sfName){
-  S.fam=famName; S.sf=sfName; S.panel='detail';
-  const sf = DATA[famName].subfams[sfName];
-  setBreadcrumb([{label:'Univers',fn:'showPanel("families")'},{label:famName,fn:`openFamily('${famName.replace(/'/g,"\\'")}')`},sfName]);
-
-  document.getElementById('sf-hero-block').innerHTML = `
-    <div class="hero-label">${DATA[famName].icon} ${famName}</div>
-    <div class="hero-title">${sfName}</div>
-    <div class="hero-kpis">
-      <div class="hkpi"><div class="hkpi-n">${sf.v.toLocaleString('fr')}</div><div class="hkpi-l">Recherches</div></div>
-      <div class="hkpi ${sf.d>=0.55?'accent':''}"><div class="hkpi-n">${(sf.d*100).toFixed(1)}%</div><div class="hkpi-l">Dispersion</div></div>
-      <div class="hkpi"><div class="hkpi-n" style="color:var(--alert)">${sf.nr.length}</div><div class="hkpi-l">Non couverts</div></div>
-    </div>`;
-
-  const maxV = sf.terms[0]?.v||1;
-  const covHtml = `
-    <div class="demand-block">
-      <div class="db-header">
-        <span class="db-dot covered"></span>
-        <span class="db-title">Demande active — termes avec résultats</span>
-        <span class="db-count">${sf.terms.length} termes</span>
-      </div>
-      <div class="db-cols"><span>Terme</span><span>Vol.</span><span>Dispersion</span><span>Évol. N-1</span><span>Conv.</span></div>
-      ${sf.terms.map(t=>`
-        <div class="term-row">
-          <span class="term-name">${t.t}</span>
-          <span class="term-vol">${t.v}</span>
-          <div class="term-bar-cell">
-            <div class="term-bar"><div class="term-bar-fill ${barCls(t.d)}" style="width:${Math.round(t.d*100)}%"></div></div>
-            <span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--k3);width:30px;flex-shrink:0">${(t.d*100).toFixed(0)}%</span>
-          </div>
-          <span class="term-pct-cell ${pctCls(t.pct)}">${pct(t.pct)}</span>
-          <span class="term-conv">${(t.cr*100).toFixed(1)}%</span>
-        </div>`).join('')}
-    </div>`;
-
-  const nrHtml = `
-    <div class="demand-block">
-      <div class="db-header" style="background:var(--alert-bg)">
-        <span class="db-dot uncovered"></span>
-        <span class="db-title" style="color:var(--alert)">Demande non couverte — no result</span>
-        <span class="db-count">${sf.nr.length} termes</span>
-      </div>
-      ${sf.nr.length===0
-        ?'<div class="empty" style="padding:1.5rem">✓ Aucun terme sans résultat</div>'
-        :sf.nr.map(nr=>`<div class="nr-row"><span class="nr-icon">⊘</span><span class="nr-name">${nr.t}</span><span class="nr-vol">${nr.v} rech.</span></div>`).join('')}
-    </div>`;
-
-  document.getElementById('demand-left').innerHTML = covHtml + nrHtml;
-  showPanel('detail');
-  generateSignals(famName, sfName, sf);
+function fam(fn){
+  S={lv:'fam',fam:fn,sf:null}
+  buildNav()
+  bc_set([{l:'Accueil',a:'home()'},{l:fn}])
+  const fd=D[fn]
+  const sfh=Object.entries(fd.subfams).sort((a,b)=>b[1].v-a[1].v).map(([sfn,sf])=>{
+    return '<div class="sfi" onclick="gSf(\''+esc(fn)+'\',\''+esc(sfn)+'\')">'
+      +'<div class="sfbv"><div class="sfbvf '+bc(sf.d)+'" style="height:'+Math.round(sf.d*100)+'%"></div></div>'
+      +'<div class="sfb"><div class="sfn">'+sfn+'</div>'
+      +'<div class="sfm"><span>'+sf.v.toLocaleString('fr')+' rech.</span><span>·</span><span>'+sf.terms.length+' termes</span></div></div>'
+      +'<div class="sfr"><span class="sfdc '+dc(sf.d)+'">'+(sf.d*100).toFixed(1)+'%</span>'
+      +(sf.nr.length>0?'<span class="sfnr">⊘ '+sf.nr.length+'</span>':'')
+      +'<span class="sfarr">›</span></div></div>'
+  }).join('')
+  document.getElementById('pg').innerHTML='<div class="ph" style="display:flex;align-items:flex-start;gap:11px">'
+    +'<span style="font-size:34px;line-height:1">'+fd.icon+'</span>'
+    +'<div><div class="ptitle">'+fn+'</div>'
+    +'<div style="display:flex;align-items:center;gap:9px;margin-top:6px">'
+    +'<span style="font-size:12px;font-family:\'DM Mono\',monospace;color:var(--ink3)">'+fd.v.toLocaleString('fr')+' rech.</span>'
+    +chip(fd.d)
+    +(fd.nr_total>0?'<span class="fc-nr">⊘ '+fd.nr_total+' no result</span>':'')
+    +'</div></div></div>'
+    +'<div class="sf-list">'+sfh+'</div>'
 }
 
-function showPanel(p){
-  S.panel=p;
-  ['families','subfamilies','detail'].forEach(id=>{
-    document.getElementById(`panel-${id}`).style.display = id===p?'block':'none';
-  });
-  window.scrollTo(0,0);
+function sf(fn,sfn){
+  S={lv:'sf',fam:fn,sf:sfn}
+  buildNav()
+  bc_set([{l:'Accueil',a:'home()'},{l:fn,a:'gF(\''+esc(fn)+'\')'},{l:sfn}])
+  const fd=D[fn],sf=fd.subfams[sfn]
+  const terms=sf.terms.filter(t=>t.t.length>2&&!/^[a-z]{1,3}$/.test(t.t)&&t.t!=='eau')
+  const nrs=sf.nr.filter(t=>t.t.length>2&&t.t!=='a')
+  const trh=terms.map(t=>{
+    const hot=t.pct>0.5&&t.v>30
+    return '<div class="tr">'
+      +'<div class="tn">'+t.t+(hot?'<span class="thot">↑'+(t.pct*100).toFixed(0)+'%</span>':'')+'</div>'
+      +'<div class="vc"><span class="vn">'+t.v+'</span><span class="vev">'+ev(t.pct)+'</span></div>'
+      +'<div class="dcc"><div class="dbar"><div class="dbarf '+bc(t.d)+'" style="width:'+Math.round(t.d*100)+'%"></div></div>'
+      +'<span class="dpct" style="color:'+(t.d>=0.6?'var(--r)':t.d>=0.5?'var(--o)':t.d<0.45?'var(--g)':'var(--ink3)')+'">'+Math.round(t.d*100)+'%</span></div>'
+      +'<div class="ccv">'+(t.cr*100).toFixed(1)+'%</div>'
+      +'</div>'
+  }).join('')
+  const nrh=nrs.length===0?'<div class="nr-em">✓ Aucun terme sans résultat</div>'
+    :nrs.map(nr=>'<div class="nr-row"><span class="nr-ic">⊘</span><span class="nr-nm">'+nr.t+'</span><span class="nr-vl">'+nr.v+' rech.</span></div>').join('')
+  const dc2=dc(sf.d)
+  document.getElementById('pg').innerHTML=
+    '<div class="ph">'
+    +'<div style="font-size:11px;font-family:\'DM Mono\',monospace;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">'+fd.icon+' '+fn+'</div>'
+    +'<div class="ptitle">'+sfn+'</div></div>'
+    +'<div class="krow">'
+    +'<div class="kb"><div class="kn">'+sf.v.toLocaleString('fr')+'</div><div class="kl">Recherches</div></div>'
+    +'<div class="kb" style="border-color:'+(sf.d>=0.6?'var(--r-bd)':sf.d>=0.5?'var(--o-bd)':sf.d<0.45?'var(--g-bd)':'var(--bd)')+'"><div class="kn" style="color:'+(sf.d>=0.6?'var(--r)':sf.d>=0.5?'var(--o)':sf.d<0.45?'var(--g)':'var(--ink)')+'">'+((sf.d)*100).toFixed(1)+'%</div><div class="kl">Dispersion</div></div>'
+    +'<div class="kb" style="background:var(--r-bg);border-color:var(--r-bd)"><div class="kn" style="color:var(--r)">'+nrs.length+'</div><div class="kl" style="color:var(--r)">No result</div></div>'
+    +'</div>'
+    +'<div class="dgrid">'
+    +'<div class="blk"><div class="bh"><span class="bhdot t"></span><span class="bhtit">Termes avec résultats</span><span class="bhct">'+terms.length+'</span></div>'
+    +'<div class="colh"><span>Terme</span><span style="text-align:right">Vol. &nbsp;N-1</span><span>Dispersion</span><span style="text-align:right">Conv.</span></div>'
+    +trh+'</div>'
+    +'<div class="blk"><div class="bh" style="background:var(--r-bg)"><span class="bhdot n"></span><span class="bhtit" style="color:var(--r)">No result</span><span class="bhct">'+nrs.length+'</span></div>'
+    +nrh+'</div>'
+    +'</div>'
 }
 
-// ── SIGNALS ───────────────────────────────────────────────────────────────────
-async function generateSignals(famName, sfName, sf){
-  const key = `${famName}::${sfName}`;
-  document.getElementById('sig-loading').style.display='flex';
-  document.getElementById('signals-content').innerHTML='';
-  if(S.signals[key]){renderSignals(S.signals[key]);return;}
-  const top = sf.terms.slice(0,5).map(t=>`${t.t} (${t.v} rech, disp ${(t.d*100).toFixed(0)}%, ${pct(t.pct)})`).join('; ');
-  const nr = sf.nr.slice(0,4).map(t=>t.t).join(', ')||'aucun';
-  const trend = sf.trend?`hausse forte: ${sf.trend.t} (${pct(sf.trend.pct)})`:'aucun';
-  const prompt = `Tu es catégorie manager B2B eMerchandising. Analyse pour la sous-famille "${sfName}" (univers ${famName}).
-Termes: ${top}
-Sans résultat: ${nr}
-Tendance: ${trend}
-Dispersion moy: ${(sf.d*100).toFixed(1)}%
-
-Génère 3 signaux actionnables courts (1-2 phrases). Direct, style catman. Distingue trous d'offre, problèmes contenu, opportunités croissance. Pas de titre. Gras pour termes clés. Séparés par ligne vide. Français.`;
-  try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})});
-    const data = await res.json();
-    const text = data.content?.find(b=>b.type==='text')?.text||'';
-    S.signals[key]=text; renderSignals(text);
-  }catch(e){
-    const fb = buildFB(sfName,sf); S.signals[key]=fb; renderSignals(fb);
-  }
+function gF(fn){fam(fn);window.scrollTo(0,0)}
+function gSf(fn,sfn){sf(fn,sfn);window.scrollTo(0,0)}
+function toggleTheme(){
+  const h=document.documentElement,dark=h.getAttribute('data-theme')==='dark'
+  h.setAttribute('data-theme',dark?'light':'dark')
+  document.getElementById('th-icon').textContent=dark?'◑':'○'
+  document.getElementById('th-label').textContent=dark?'Mode sombre':'Mode clair'
 }
-
-function buildFB(sfName,sf){
-  const lines=[];
-  const u=sf.terms.filter(t=>t.d>0.6&&t.v>50);
-  if(u.length) lines.push(`**${u[0].t}** (disp. ${(u[0].d*100).toFixed(0)}%) — fort volume sans bonne réponse. Le contenu produit couvre-t-il bien l'intention ?`);
-  if(sf.nr.length>0) lines.push(`**Demande non couverte** : ${sf.nr.slice(0,2).map(t=>t.t).join(', ')} — ${sf.nr.slice(0,2).reduce((s,t)=>s+t.v,0)} recherches sans résultat. Vérifier l'assortiment.`);
-  if(sf.trend) lines.push(`**${sf.trend.t}** : +${(sf.trend.pct*100).toFixed(0)}% de recherches — signal de montée en demande à intégrer dans le plan d'achat.`);
-  if(lines.length<2) lines.push(`Dispersion de **${(sf.d*100).toFixed(1)}%** — aligner les intitulés produits avec les termes de recherche clients.`);
-  return lines.join('\n\n');
-}
-
-function renderSignals(text){
-  document.getElementById('sig-loading').style.display='none';
-  const sigs = text.split(/\n\n+/).filter(s=>s.trim().length>10);
-  const isTrend = s => s.includes('%')&&(s.includes('hausse')||s.includes('croissance')||s.includes('+'));
-  document.getElementById('signals-content').innerHTML = sigs.slice(0,4).map(sig=>`
-    <div class="signal-item">
-      <div class="sig-text ${isTrend(sig)?'sig-trend':''}">${sig.trim().replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
-    </div>`).join('');
-}
-
-// ── ALERTS ────────────────────────────────────────────────────────────────────
-function renderAlerts(){
-  const alerts=[];
-  for(const[fn,fd] of Object.entries(DATA))
-    for(const[sfn,sf] of Object.entries(fd.subfams))
-      if(sf.nr.length>0) alerts.push({fn,sfn,icon:fd.icon,nr:sf.nr});
-  alerts.sort((a,b)=>b.nr.length-a.nr.length);
-  const total = alerts.reduce((s,a)=>s+a.nr.length,0);
-  document.getElementById('alert-sub').textContent=`${total} termes sans résultat sur ${alerts.length} sous-familles`;
-  document.getElementById('snav-alertes-count').textContent=total;
-  document.getElementById('alert-grid').innerHTML=alerts.slice(0,24).map(a=>`
-    <div class="list-card" onclick="openDetail('${a.fn.replace(/'/g,"\\'")}','${a.sfn.replace(/'/g,"\\'")}');setView('univers')">
-      <div class="lc-icon">${a.icon}</div>
-      <div class="lc-body">
-        <div class="lc-name">${a.sfn}</div>
-        <div class="lc-sub">${a.fn}</div>
-        <div class="lc-terms">${a.nr.slice(0,3).map(t=>t.t).join(' · ')}</div>
-      </div>
-      <div class="lc-right"><span class="badge-alert">⊘ ${a.nr.length}</span></div>
-    </div>`).join('');
-}
-
-// ── TRENDS ────────────────────────────────────────────────────────────────────
-function renderTrends(){
-  const trends=[];
-  const seen=new Set();
-  for(const[fn,fd] of Object.entries(DATA))
-    for(const[sfn,sf] of Object.entries(fd.subfams)){
-      if(sf.trend&&sf.trend.pct>0.5&&!seen.has(sf.trend.t)){seen.add(sf.trend.t);trends.push({fn,sfn,icon:fd.icon,trend:sf.trend,d:sf.d});}
-      sf.terms.filter(t=>t.pct>1&&t.v>30&&!seen.has(t.t)).forEach(t=>{seen.add(t.t);trends.push({fn,sfn,icon:fd.icon,trend:{t:t.t,pct:t.pct},d:sf.d,tv:t.v});});
-    }
-  trends.sort((a,b)=>b.trend.pct-a.trend.pct);
-  document.getElementById('trend-sub').textContent=`${trends.length} signaux de croissance détectés`;
-  document.getElementById('snav-tendances-count').textContent=trends.length;
-  document.getElementById('trend-grid').innerHTML=trends.slice(0,24).map(t=>`
-    <div class="list-card" onclick="openDetail('${t.fn.replace(/'/g,"\\'")}','${t.sfn.replace(/'/g,"\\'")}');setView('univers')">
-      <div class="lc-icon">${t.icon}</div>
-      <div class="lc-body">
-        <div class="lc-name">${t.trend.t}</div>
-        <div class="lc-sub">${t.sfn} · ${t.fn}</div>
-        ${t.tv?`<div class="lc-sub" style="color:var(--k4)">${t.tv} recherches</div>`:''}
-      </div>
-      <div class="lc-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        <span class="badge-trend">↑ ${pct(t.trend.pct)}</span>
-        <span class="badge-disp">${(t.d*100).toFixed(0)}% disp.</span>
-      </div>
-    </div>`).join('');
-}
-
-// ── NAV ───────────────────────────────────────────────────────────────────────
-function setView(v){
-  S.view=v;
-  document.querySelectorAll('.tab-view').forEach(el=>el.classList.remove('active'));
-  document.getElementById(`view-${v}`).classList.add('active');
-  ['univers','alertes','tendances'].forEach(id=>{
-    document.getElementById(`snav-${id}`)?.classList.toggle('active',id===v);
-    document.getElementById(`mn-${id}`)?.classList.toggle('active',id===v);
-  });
-  if(v==='univers') setBreadcrumb([S.panel==='families'?{label:'Univers'}:S.panel==='subfamilies'?{label:S.fam}:{label:S.sf}]);
-  else setBreadcrumb([{label:v.charAt(0).toUpperCase()+v.slice(1)}]);
-}
-
-function setBreadcrumb(parts){
-  const el = document.getElementById('breadcrumb');
-  el.innerHTML = parts.map((p,i)=>{
-    if(i===parts.length-1) return `<span class="tb-bc-current">${p.label||p}</span>`;
-    return `<span style="cursor:pointer;color:var(--k3)" onclick="${p.fn||''}">${p.label||p}</span><span class="tb-bc-sep">›</span>`;
-  }).join('');
-}
-
-window.setView=setView; window.openFamily=openFamily; window.openDetail=openDetail; window.showPanel=showPanel;
-init();
+window.home=home;window.gF=gF;window.gSf=gSf;window.toggleTheme=toggleTheme;
+home();
 </script>
 </body>
 </html>
